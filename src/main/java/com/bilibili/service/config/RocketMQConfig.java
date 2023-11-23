@@ -24,6 +24,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Configuration
 public class RocketMQConfig {
 
@@ -35,6 +38,7 @@ public class RocketMQConfig {
 
     @Autowired
     private UserFollowingService userFollowingService;
+//    private static final Logger logger = LoggerFactory.getLogger(RocketMQConfig.class);
 
     //用户动态生产者
     @Bean("momentsProducer")
@@ -47,6 +51,7 @@ public class RocketMQConfig {
 
     @Bean("momentsConsumer")
     public DefaultMQPushConsumer momentsConsumer() throws MQClientException {
+//        logger.debug("Configuring Moments Consumer...");
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(UserMomentsConstant.GROUP_MOMENTS);
         consumer.setNamesrvAddr(nameServerAddr);
         //订阅生产者
