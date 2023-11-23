@@ -53,7 +53,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         Date date = new Date();
         String salt = String.valueOf(date.getTime());
-        String userPassword = user.getUserPassword();
+        String userPassword;
+        //加密应在前端进行，此处仅为用户注册测试
+        try{
+             userPassword= RSAUtil.encrypt(user.getUserPassword());
+        }catch (Exception e){
+            throw new ConditionException("数据加密异常！");
+        }
         String rawPassword;
         try {
             rawPassword = RSAUtil.decrypt(userPassword);
@@ -75,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userInfo.setGender(UserConstant.GENDER_UNKNOW);
         userInfoService.save(userInfo);
         //添加用户默认权限角色
-        userAuthService.addUserDefaultRole(user.getId());
+//        userAuthService.addUserDefaultRole(user.getId());
         //添加用户硬币数量
         UserCoin userCoin = new UserCoin();
         userCoin.setUserId(user.getId());
