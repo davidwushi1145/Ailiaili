@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bilibili.mapper.VideoCoinMapper">
+<mapper namespace="com.bilibili.dao.mapper.VideoCoinMapper">
 
     <resultMap id="BaseResultMap" type="com.bilibili.dao.domain.VideoCoin">
             <id property="id" column="id" jdbcType="BIGINT"/>
