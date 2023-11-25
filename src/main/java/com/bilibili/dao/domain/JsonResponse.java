@@ -18,7 +18,7 @@ public class JsonResponse<T> {
     public JsonResponse(T data){
         this.data = data;
         msg = "成功";
-        code = "0";
+        code = "200";
     }
 
     public static JsonResponse<String> success(){
@@ -30,7 +30,7 @@ public class JsonResponse<T> {
     }
 
     public static JsonResponse<String> fail(){
-        return new JsonResponse<>("1","失败");
+        return new JsonResponse<>("400","失败");
     }
 
     public static JsonResponse<String> fail(String code,String msg){
