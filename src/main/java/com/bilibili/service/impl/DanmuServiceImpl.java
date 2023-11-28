@@ -81,13 +81,18 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
     public void addDanmuToRedis(Danmu danmu) {
         String key = "danmu-video-" + danmu.getVideoId();
         String value = redisTemplate.opsForValue().get(key);
-        List<Danmu> list = new ArrayList<>();
-        if(!StringUtils.isNotBlank(value)){
+        List<Danmu> list;
+        if(StringUtils.isNotBlank(value)){
+            // 解析value为Danmu列表
             list = JSONArray.parseArray(value, Danmu.class);
+        } else {
+            // 初始化空列表
+            list = new ArrayList<>();
         }
         list.add(danmu);
         redisTemplate.opsForValue().set(key, JSONObject.toJSONString(list));
     }
+
 
 
     @Override

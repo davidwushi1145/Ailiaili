@@ -105,7 +105,7 @@ public class WebSocketService {
                     //弹幕保存持久化
                     Danmu danmu = JSONObject.parseObject(message, Danmu.class);
                     danmu.setUserId(userId);
-                    DanmuService danmuService = (DanmuService) APPLICATION_CONTEXT.getBean("danmuService");
+                    DanmuService danmuService = (DanmuService) APPLICATION_CONTEXT.getBean("danmuServiceImpl");
                     // TODO 通过消息队列对持久化进行削峰
                     danmuService.asyncAddDanmu(danmu);
                     //保存到redis
