@@ -40,7 +40,7 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
 
     @Override
     public List<Danmu> getDanmus(Map<String,Object> map) throws ParseException {
-        String videoId = (String) map.get("videoId");
+        String videoId = String.valueOf(map.get("videoId"));
         String startDate = (String) map.get("startDate");
         String endDate = (String) map.get("endDate");
         if(StringUtils.isBlank(videoId)){

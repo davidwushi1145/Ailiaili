@@ -123,6 +123,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         //推荐商品
         List<RecommendedItem> recommendedItems = recommender.recommend(userId,5);
         List<Long> collect = recommendedItems.stream().map(RecommendedItem::getItemID).collect(Collectors.toList());
+        // 检查推荐列表是否为空
+        if (collect.isEmpty()) {
+            // 返回一个空列表或者默认推荐
+            return Collections.emptyList(); // 或者返回默认推荐视频列表
+        }
         return this.listByIds(collect);
     }
 
