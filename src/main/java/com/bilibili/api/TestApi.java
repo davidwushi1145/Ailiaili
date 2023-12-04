@@ -31,28 +31,28 @@ public class TestApi {
     }
 
     @GetMapping("/es-videos")
-    public JsonResponse<Video> getEsVideos(@RequestParam String keyword){
+    public JsonResponse<Video> getEsVideos(@RequestParam String keyword) {
         Video video = elasticSearchService.getVideo(keyword);
         return new JsonResponse<>(video);
     }
 
     @DeleteMapping("/es-videos")
-    public JsonResponse<String> deleteVideos(){
+    public JsonResponse<String> deleteVideos() {
         elasticSearchService.deleteAllVideos();
         return JsonResponse.success();
     }
 
     @DeleteMapping("/es-contents")
-    public JsonResponse<String> deleteContents(){
+    public JsonResponse<String> deleteContents() {
         elasticSearchService.deleteAllVideos();
         elasticSearchService.deleteAllUserInfos();
         return JsonResponse.success();
     }
 
     @GetMapping("/contents")
-    public JsonResponse<List<Map<String,Object>>> getContents(@RequestParam String keyword,
-                                                              @RequestParam Integer pageNumber,
-                                                              @RequestParam Integer pageSize) throws IOException {
+    public JsonResponse<List<Map<String, Object>>> getContents(@RequestParam String keyword,
+                                                               @RequestParam Integer pageNumber,
+                                                               @RequestParam Integer pageSize) throws IOException {
         List<Map<String, Object>> contents = elasticSearchService.getContents(keyword, pageNumber, pageSize);
         return new JsonResponse<>(contents);
     }

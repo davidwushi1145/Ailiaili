@@ -50,8 +50,11 @@ public class VideoViewServiceImpl extends ServiceImpl<VideoViewMapper, VideoView
         //添加观看记录
         VideoView videoView1 = videoViewMapper.getVideoView(params);
         if(videoView1 ==null){
+            videoView1 = new VideoView();
             videoView1.setIp(ip);
             videoView1.setClientId(String.valueOf(agentId));
+            videoView1.setUserId(userId);
+            videoView1.setVideoId(videoId);
             this.save(videoView1);
         }
     }
