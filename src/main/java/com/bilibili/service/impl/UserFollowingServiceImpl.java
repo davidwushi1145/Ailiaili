@@ -76,6 +76,7 @@ public class UserFollowingServiceImpl extends ServiceImpl<UserFollowingMapper, U
         if(user==null){
             throw new ConditionException("关注用户不存在！");
         }
+        //应该是再次点击关注按钮 取消关注
         this.deleteUserFollowing(userFollowing.getUserId(),followingId);
         this.save(userFollowing);
     }

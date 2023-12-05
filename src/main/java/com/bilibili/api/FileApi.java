@@ -2,6 +2,7 @@ package com.bilibili.api;
 
 import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.service.FileService;
+import com.bilibili.service.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,19 +18,20 @@ public class FileApi {
     @Autowired
     private FileService fileService;
 
+
     //上传文件+秒传
     @PutMapping("/file-slices")
     public JsonResponse<String> uploadFileBySlices(MultipartFile slice,
                                                    String fileMD5,
                                                    Integer sliceNumber,
                                                    Integer totalSliceNumber) throws IOException {
-        String filePath = fileService.uploadFileBySlices(slice,fileMD5,sliceNumber,totalSliceNumber);
+        String filePath = fileService.uploadFileBySlices(slice, fileMD5, sliceNumber, totalSliceNumber);
         return new JsonResponse<>(filePath);
     }
 
     //删除文件
     @DeleteMapping("/file-delete")
-    public JsonResponse<String> deleteFile(String filePath){
+    public JsonResponse<String> deleteFile(String filePath) {
         fileService.deleteFile(filePath);
         return new JsonResponse<>("删除成功！");
     }

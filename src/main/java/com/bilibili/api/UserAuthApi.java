@@ -19,7 +19,7 @@ public class UserAuthApi {
 
     //获取用户权限信息
     @GetMapping("/user-authorities")
-    public JsonResponse<UserAuthorities> getUserAuthorities(){
+    public JsonResponse<UserAuthorities> getUserAuthorities() {
         Long userId = userSupport.getCurrentUserId();
         UserAuthorities userAuthorities = userAuthService.getUserAuthorities(userId);
         return new JsonResponse<>(userAuthorities);

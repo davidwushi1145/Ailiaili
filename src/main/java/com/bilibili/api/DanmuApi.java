@@ -29,17 +29,17 @@ public class DanmuApi {
                                                String startTime,
                                                String endTime) throws ParseException {
         List<Danmu> list;
-        try{
+        try {
             userSupport.getCurrentUserId();
             //登录模式可以使用按时间筛选
-            Map<String,Object> map = new HashMap<>();
-            map.put("startDate",startTime);
-            map.put("endDate",endTime);
-            map.put("videoId",videoId);
+            Map<String, Object> map = new HashMap<>();
+            map.put("startDate", startTime);
+            map.put("endDate", endTime);
+            map.put("videoId", videoId);
             list = danmuService.getDanmus(map);
-        }catch (Exception e){
-            Map<String,Object> map = new HashMap<>();
-            map.put("videoId",videoId);
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("videoId", String.valueOf(videoId));
             list = danmuService.getDanmus(map);
         }
         return new JsonResponse<>(list);

@@ -28,7 +28,7 @@
                 and client_id = #{clientId} and user_id is null
             </if>
             <if test="userId !=null">
-                and userId = #{userId}
+                and user_Id = #{userId}
             </if>
             <if test="ip !=null and ip != ''">
                 and ip = #{ip}

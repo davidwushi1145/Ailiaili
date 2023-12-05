@@ -43,11 +43,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public void addUser(User user) {
         String phone = user.getPhone();
-        if(StringUtils.isBlank(phone)){
+        if (StringUtils.isBlank(phone)) {
             throw new ConditionException("手机号不能为空！");
         }
         User dbUser = this.getUserByPhone(phone);
-        if(dbUser!=null){
+        if (dbUser != null) {
             throw new ConditionException("该手机号已经注册！");
         }
         Date date = new Date();
@@ -63,7 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setSalt(salt);
         user.setUserPassword(md5Password);
         boolean result = this.save(user);
-        if(!result){
+        if (!result) {
             throw new ConditionException("用户注册失败！");
         }
         //添加用户信息
@@ -82,21 +82,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userCoinService.save(userCoin);
     }
 
-    public User getUserByPhone(String phone){
+    public User getUserByPhone(String phone) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("phone",phone);
+        queryWrapper.eq("phone", phone);
         return this.getOne(queryWrapper);
     }
 
     @Override
-    public String login(User user) throws Exception{
+    public String login(User user) throws Exception {
         String phone = user.getPhone();
-        if(StringUtils.isBlank(phone)){
+        if (StringUtils.isBlank(phone)) {
             throw new ConditionException("手机号不能为空！");
         }
         User dbUser = this.getUserByPhone(phone);
-        if(dbUser==null){
-            throw  new ConditionException("当前用户不存在");
+        if (dbUser == null) {
+            throw new ConditionException("当前用户不存在");
         }
         String userPassword = user.getUserPassword();
         String rawPassword;
@@ -107,7 +107,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         String salt = dbUser.getSalt();
         String md5Password = MD5Util.sign(rawPassword, salt, "UTF-8");
-        if(!dbUser.getUserPassword().equals(md5Password)){
+        if (!dbUser.getUserPassword().equals(md5Password)) {
             throw new ConditionException("密码错误！");
         }
         //生成用户令牌，返回
@@ -118,8 +118,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public User getUserInfo(Long userId) {
         User user = this.getById(userId);
-        QueryWrapper<UserInfo> queryWrapper  =new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
         UserInfo userInfo = userInfoService.getOne(queryWrapper);
         user.setUserInfo(userInfo);
         return user;
@@ -128,8 +128,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public void updateUserInfos(UserInfo userInfo) {
         UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("user_id",userInfo.getUserId());
-        userInfoService.update(userInfo,updateWrapper);
+        updateWrapper.eq("user_id", userInfo.getUserId());
+        userInfoService.update(userInfo, updateWrapper);
     }
 
     @Override
@@ -138,27 +138,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Integer size = params.getInteger("size");
         String nick = params.getString("nick");
         QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(nick!=null&&nick!="","nick",nick);
+        queryWrapper.eq(nick != null && nick != "", "nick", nick);
         queryWrapper.orderByDesc("id");
         int count = (int) userInfoService.count(queryWrapper);
         List<UserInfo> list = new ArrayList<>();
-        if(count>0){
-            IPage<UserInfo> iPage = new Page<>((page-1)*size,size);
-            iPage = userInfoService.page(iPage,queryWrapper);
+        if (count > 0) {
+            IPage<UserInfo> iPage = new Page<>((page - 1) * size, size);
+            iPage = userInfoService.page(iPage, queryWrapper);
             list = iPage.getRecords();
         }
-        return new PageResult<>(count,list);
+        return new PageResult<>(count, list);
     }
 
     @Override
     public Map<String, Object> loginForDts(User user) throws Exception {
         String phone = user.getPhone();
-        if(StringUtils.isBlank(phone)){
+        if (StringUtils.isBlank(phone)) {
             throw new ConditionException("手机号不能为空！");
         }
         User dbUser = this.getUserByPhone(phone);
-        if(dbUser==null){
-            throw  new ConditionException("当前用户不存在");
+        if (dbUser == null) {
+            throw new ConditionException("当前用户不存在");
         }
         String userPassword = user.getUserPassword();
         String rawPassword;
@@ -169,7 +169,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         String salt = dbUser.getSalt();
         String md5Password = MD5Util.sign(rawPassword, salt, "UTF-8");
-        if(!dbUser.getUserPassword().equals(md5Password)){
+        if (!dbUser.getUserPassword().equals(md5Password)) {
             throw new ConditionException("密码错误！");
         }
         Long userId = dbUser.getId();
@@ -178,33 +178,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         String refreshToken = TokenUtil.generateRefreshToken(userId);
         //保存refreshToken到数据库
         QueryWrapper<RefreshToken> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("refresh_token",refreshToken);
+        queryWrapper.eq("refresh_token", refreshToken);
         refreshTokenService.remove(queryWrapper);
         RefreshToken refreshToken1 = new RefreshToken();
         refreshToken1.setUserId(userId);
         refreshToken1.setRefreshToken(refreshToken);
         refreshTokenService.save(refreshToken1);
 
-        Map<String,Object> result = new HashMap<>();
-        result.put("accessToken",accessToken);
-        result.put("refreshToken",refreshToken);
+        Map<String, Object> result = new HashMap<>();
+        result.put("accessToken", accessToken);
+        result.put("refreshToken", refreshToken);
         return result;
     }
 
     @Override
     public void logout(String refreshToken, Long userId) {
         QueryWrapper<RefreshToken> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("refresh_token",refreshToken);
+        queryWrapper.eq("refresh_token", refreshToken);
         refreshTokenService.remove(queryWrapper);
     }
 
     @Override
     public String refreshAccessToken(String refreshToken) throws Exception {
         QueryWrapper<RefreshToken> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("refresh_token",refreshToken);
+        queryWrapper.eq("refresh_token", refreshToken);
         RefreshToken refreshToken1 = refreshTokenService.getOne(queryWrapper);
-        if(refreshToken1==null){
-            throw new ConditionException("555","token过期！");
+        if (refreshToken1 == null) {
+            throw new ConditionException("555", "token过期！");
         }
         Long userId = refreshToken1.getUserId();
         String accessToken = TokenUtil.generateToken(userId);

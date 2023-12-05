@@ -30,7 +30,7 @@ public class UserApi {
     private UserFollowingService userFollowingService;
 
     @GetMapping("/users")
-    public JsonResponse<User> getUserInfo(){
+    public JsonResponse<User> getUserInfo() {
         Long userId = userSupport.getCurrentUserId();
         User user = userService.getUserInfo(userId);
         return new JsonResponse<>(user);
@@ -58,7 +58,7 @@ public class UserApi {
     }
 
     @PutMapping("/users")
-    public JsonResponse<String> updateUsers(@RequestBody User user){
+    public JsonResponse<String> updateUsers(@RequestBody User user) {
         Long userId = userSupport.getCurrentUserId();
         user.setId(userId);
         userService.updateById(user);
@@ -66,7 +66,7 @@ public class UserApi {
     }
 
     @PutMapping("/user-infos")
-    public JsonResponse<String> updateUserInfos(@RequestBody UserInfo userInfo){
+    public JsonResponse<String> updateUserInfos(@RequestBody UserInfo userInfo) {
         Long userId = userSupport.getCurrentUserId();
         userInfo.setUserId(userId);
         userService.updateUserInfos(userInfo);
@@ -75,17 +75,17 @@ public class UserApi {
 
     //用户分页查询
     @GetMapping("/user-infos")
-    public JsonResponse<PageResult<UserInfo>> pageListUserInfos(@RequestParam Integer page,@RequestParam Integer size,@RequestParam  String nick){
+    public JsonResponse<PageResult<UserInfo>> pageListUserInfos(@RequestParam Integer page, @RequestParam Integer size, @RequestParam String nick) {
         Long userId = userSupport.getCurrentUserId();
         JSONObject params = new JSONObject();
-        params.put("page",page);
-        params.put("size",size);
-        params.put("nick",nick);
-        params.put("userId",userId);
-        PageResult<UserInfo> result =  userService.pageListUserInfos(params);
+        params.put("page", page);
+        params.put("size", size);
+        params.put("nick", nick);
+        params.put("userId", userId);
+        PageResult<UserInfo> result = userService.pageListUserInfos(params);
         //判断是否关注该用户
-        if(result.getTotal() >0){
-            List<UserInfo> checkedUserInfoList = userFollowingService.checkFollowingStatus(result.getList(),userId);
+        if (result.getTotal() > 0) {
+            List<UserInfo> checkedUserInfoList = userFollowingService.checkFollowingStatus(result.getList(), userId);
             result.setList(checkedUserInfoList);
         }
         return new JsonResponse<>(result);
@@ -93,17 +93,17 @@ public class UserApi {
 
     //双token机制，带刷新
     @PostMapping("/user-dts")
-    public JsonResponse<Map<String,Object>> loginForDts(@RequestBody User user) throws Exception {
-        Map<String,Object> map = userService.loginForDts(user);
+    public JsonResponse<Map<String, Object>> loginForDts(@RequestBody User user) throws Exception {
+        Map<String, Object> map = userService.loginForDts(user);
         return new JsonResponse<>(map);
     }
 
     //双令牌退出登录
     @DeleteMapping("/refresh-tokens")
-    public JsonResponse<String> logout(HttpServletRequest request){
+    public JsonResponse<String> logout(HttpServletRequest request) {
         String refreshToken = request.getHeader("refreshToken");
         Long userId = userSupport.getCurrentUserId();
-        userService.logout(refreshToken,userId);
+        userService.logout(refreshToken, userId);
         return JsonResponse.success();
     }
 

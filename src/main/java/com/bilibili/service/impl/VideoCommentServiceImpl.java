@@ -57,7 +57,7 @@ public class VideoCommentServiceImpl extends ServiceImpl<VideoCommentMapper, Vid
             throw new ConditionException("非法视频！");
         }
         //分页查询
-        IPage<VideoComment> iPage = new Page<>((number-1)*size,size);
+        IPage<VideoComment> iPage = new Page<>(number,size);
         QueryWrapper<VideoComment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("video_id",videoId);
         queryWrapper.isNull("root_id");

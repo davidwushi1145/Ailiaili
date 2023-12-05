@@ -39,7 +39,7 @@ public class UserMomentApi {
 
     //获取关注用户的动态
     @GetMapping("/user-subscribed-moments")
-    public JsonResponse<List<UserMoments>> getUserSubscribedMoments(){
+    public JsonResponse<List<UserMoments>> getUserSubscribedMoments() {
         Long userId = userSupport.getCurrentUserId();
         List<UserMoments> list = userMomentsService.getUserSubscribedMoments(userId);
         return new JsonResponse<>(list);

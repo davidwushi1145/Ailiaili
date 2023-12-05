@@ -59,7 +59,7 @@ public class VideoLikeServiceImpl extends ServiceImpl<VideoLikeMapper, VideoLike
         int count = (int) this.count(queryWrapper);
         queryWrapper.eq("user_id",userId);
         VideoLike videoLike = this.getOne(queryWrapper);
-        //判断用户是否关注过
+        //判断用户是否点赞过
         boolean like = videoLike !=null;
         Map<String,Object> map = new HashMap<>();
         map.put("count",count);
