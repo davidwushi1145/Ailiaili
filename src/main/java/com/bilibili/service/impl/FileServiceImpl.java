@@ -38,7 +38,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File>
     @Override
     public String uploadFileBySlices(MultipartFile slice, String fileMD5, Integer sliceNumber, Integer totalSliceNumber) throws IOException {
 
-        File dbFileMD5 = this.getFileByMD5(fileName + MD5Util.getFileMD5(slice) + "." + cosUtil.getFileType(slice));
+        File dbFileMD5 = this.getFileByMD5(MD5Util.getFileMD5(slice));
         //秒传
         if (dbFileMD5 != null) {
             return dbFileMD5.getUrl();
@@ -57,7 +57,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File>
         if (StringUtils.isNotBlank(filePath)) {
             dbFileMD5 = new File();
             dbFileMD5.setUrl(filePath);
-            dbFileMD5.setMd5(fileName + MD5Util.getFileMD5(slice) + "." + cosUtil.getFileType(slice));
+            dbFileMD5.setMd5(MD5Util.getFileMD5(slice));
             dbFileMD5.setType(cosUtil.getFileType(slice));
             this.save(dbFileMD5);
         }
