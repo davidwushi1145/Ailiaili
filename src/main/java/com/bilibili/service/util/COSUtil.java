@@ -20,10 +20,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -137,13 +134,26 @@ public class COSUtil {
         return cosClient.getObjectUrl(cosClientConfig.getBucket(), keyName);
     }
 
-    public void deleteFile(String keyName) {
-        // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)
-        try {
-            cosClient.deleteObject(cosClientConfig.getBucket(), keyName);
-        } catch (CosClientException e) {
-            e.printStackTrace();
-        }
+    public void deleteVideoFile(String md5, String type) {
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(cosClientConfig.getBucket());
+        // 设置要删除的key列表, 最多一次删除1000个
+        ArrayList<DeleteObjectsRequest.KeyVersion> keyList = new ArrayList<>();
+
+        keyList.add(new DeleteObjectsRequest.KeyVersion("bilibili/" + md5 + "." + type));
+        keyList.add(new DeleteObjectsRequest.KeyVersion("bilibili/流畅" + md5 + "." + type));
+        keyList.add(new DeleteObjectsRequest.KeyVersion("bilibili/高清" + md5 + "." + type));
+        keyList.add(new DeleteObjectsRequest.KeyVersion("bilibili/标清" + md5 + "." + type));
+        keyList.add(new DeleteObjectsRequest.KeyVersion("bilibili/超清" + md5 + "." + type));
+
+        deleteObjectsRequest.setKeys(keyList);
+
+        DeleteObjectsResult deleteObjectsResult = cosClient.deleteObjects(deleteObjectsRequest);
+        List<DeleteObjectsResult.DeletedObject> deleteObjectResultArray = deleteObjectsResult.getDeletedObjects();
+
+    }
+
+    public void deleteAdvertisementFile(String md5, String type) {
+        cosClient.deleteObject(cosClientConfig.getBucket(), "bilibili/advertisement" + md5 + "." + type);
     }
 
     public String initiateMultipartUpload(String key) {
