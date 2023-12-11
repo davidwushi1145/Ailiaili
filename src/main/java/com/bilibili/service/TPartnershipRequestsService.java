@@ -21,4 +21,6 @@ public interface TPartnershipRequestsService extends IService<TPartnershipReques
     List<TPartnershipRequests> getTPartnershipRequests(Long userId, String status);
 
     void rejectPartnershipRequest(Long requestId);
+
+    TPartnershipRequests getByRequestId(Long requestId);
 }

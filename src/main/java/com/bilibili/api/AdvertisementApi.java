@@ -1,12 +1,12 @@
 package com.bilibili.api;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.*;
 import com.bilibili.dao.domain.exception.ConditionException;
-import com.bilibili.service.TAdPerformanceService;
-import com.bilibili.service.TAdSpaceService;
-import com.bilibili.service.TAdvertisementService;
-import com.bilibili.service.TPartnershipRequestsService;
+import com.bilibili.service.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,12 @@ public class AdvertisementApi {
     @Autowired
     private TPartnershipRequestsService tPartnershipRequestsService;
 
+    @Autowired
+    private TPartnershipService tPartnershipService;
+
+    @Autowired
+    private TMessagesService tMessagesService;
+
     //获取广告位信息
     @GetMapping("/get-adSpaceList")
     public JsonResponse<List<TAdSpace>> getAdSpaceList() {
@@ -58,7 +64,11 @@ public class AdvertisementApi {
         return new JsonResponse<>(tAdvertisement);
     }
 
-    //
+    //展示广告
+    @GetMapping("/get-advertisement")
+    public JsonResponse<TAdvertisement> getAdvertisement(@RequestParam Long adSpaceId) {
+        return new JsonResponse<>(tAdvertisementService.getByAdSpaceId(adSpaceId));
+    }
 
     //广告被展示
     @PostMapping("/impressions-advertisement")
@@ -113,6 +123,24 @@ public class AdvertisementApi {
     @PostMapping("/partnership/acceptedRequest")
     public JsonResponse<String> acceptPartnershipRequest(@RequestParam Long requestId) {
         tPartnershipRequestsService.acceptPartnershipRequest(requestId);
+
+        TPartnershipRequests tPartnershipRequests = tPartnershipRequestsService.getByRequestId(requestId);
+        //更新合作表
+        TPartnership tPartnership = new TPartnership();
+        tPartnership.setAdvertiserId(tPartnershipRequests.getAdvertiserId());
+        tPartnership.setCreatorId(tPartnershipRequests.getContentCreatorId());
+        tPartnership.setStartTime(new Date());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date()); // 设置为当前时间
+        calendar.add(Calendar.DATE, tPartnershipRequests.getExpectedDuration()); // 添加期望的合作期限
+        Date endTime = calendar.getTime(); // 获得结束时间
+        tPartnership.setEndTime(endTime);
+
+        tPartnership.setContent(tPartnershipRequests.getDetails());
+
+        tPartnershipService.save(tPartnership);
+
         return new JsonResponse<>("你成功接受了该合作");
     }
 
@@ -122,5 +150,23 @@ public class AdvertisementApi {
         tPartnershipRequestsService.rejectPartnershipRequest(requestId);
         return new JsonResponse<>("你成功拒绝了该合作");
     }
+
+    //发送消息
+    public JsonResponse<Boolean> sendMessage(@RequestParam Long consumerId, String message) {
+
+        Long producerId = userSupport.getCurrentUserId();
+
+        TMessages tMessages = new TMessages();
+        tMessages.setSenderId(producerId);
+        tMessages.setReceiverId(consumerId);
+        tMessages.setMessage(message);
+
+        tMessagesService.save(tMessages);
+        return new JsonResponse<>(true);
+    }
+
+    //获取当前用户的聊天列表
+
+    //获取当前用户语某个用户消息
 
 }

@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface TAdvertisementService extends IService<TAdvertisement> {
 
+    TAdvertisement getByAdSpaceId(Long adSpaceId);
 }

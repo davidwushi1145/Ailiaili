@@ -66,6 +66,13 @@ public class TPartnershipRequestsServiceImpl extends ServiceImpl<TPartnershipReq
         tPartnershipRequests.setStatus("rejected");
         tPartnershipRequestsMapper.update(tPartnershipRequests, queryWrapper);
     }
+
+    @Override
+    public TPartnershipRequests getByRequestId(Long requestId) {
+        QueryWrapper<TPartnershipRequests> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",requestId);
+        return tPartnershipRequestsMapper.selectOne(queryWrapper);
+    }
 }
 
 
