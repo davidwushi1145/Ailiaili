@@ -1,8 +1,7 @@
 package com.bilibili.service;
 
-import com.bilibili.dao.domain.TMessages;
 import com.baomidou.mybatisplus.extension.service.IService;
-
+import com.bilibili.dao.domain.TMessages;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import java.util.Set;
  */
 public interface TMessagesService extends IService<TMessages> {
 
-    Set<Long> getIdList(Long userId);
+  Set<Long> getIdList(Long userId);
 
-    List<TMessages> getChatList(Long userId, Long consumerId);
+  List<TMessages> getChatList(Long userId, Long consumerId);
 }

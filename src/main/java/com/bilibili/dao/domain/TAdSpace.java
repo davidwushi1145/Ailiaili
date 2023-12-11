@@ -13,39 +13,33 @@ import lombok.Data;
  * 广告位表
  * @TableName t_ad_space
  */
-@TableName(value ="t_ad_space")
+@TableName(value = "t_ad_space")
 @Data
 public class TAdSpace implements Serializable {
-    /**
-     * 主键id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+  /**
+   * 主键id
+   */
+  @TableId(value = "id", type = IdType.AUTO) private Long id;
 
-    /**
-     * 广告位描述（如页面位置、尺寸等）
-     */
-    @TableField(value = "description")
-    private String description;
+  /**
+   * 广告位描述（如页面位置、尺寸等）
+   */
+  @TableField(value = "description") private String description;
 
-    /**
-     * 价格
-     */
-    @TableField(value = "price")
-    private BigDecimal price;
+  /**
+   * 价格
+   */
+  @TableField(value = "price") private BigDecimal price;
 
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_time")
-    private Date createTime;
+  /**
+   * 创建时间
+   */
+  @TableField(value = "create_time") private Date createTime;
 
-    /**
-     * 更新时间
-     */
-    @TableField(value = "update_time")
-    private Date updateTime;
+  /**
+   * 更新时间
+   */
+  @TableField(value = "update_time") private Date updateTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+  @TableField(exist = false) private static final long serialVersionUID = 1L;
 }
