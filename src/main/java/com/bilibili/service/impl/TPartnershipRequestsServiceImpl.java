@@ -36,6 +36,7 @@ public class TPartnershipRequestsServiceImpl extends ServiceImpl<TPartnershipReq
         tPartnershipRequests.setDetails(details);
         tPartnershipRequests.setExpectedDuration(expectedDuration);
         tPartnershipRequests.setExpectedCompensation(expectedCompensation);
+
         this.save(tPartnershipRequests);
     }
 
@@ -54,6 +55,8 @@ public class TPartnershipRequestsServiceImpl extends ServiceImpl<TPartnershipReq
         queryWrapper.eq("content_creator_id", userId);
         if (StringUtils.isNotEmpty(status)) {
             queryWrapper.eq("status", status);
+        } else {
+            queryWrapper.and(wrapper -> wrapper.eq("status", "accepted").or().eq("status", "rejected"));
         }
         return tPartnershipRequestsMapper.selectList(queryWrapper);
     }
@@ -70,7 +73,7 @@ public class TPartnershipRequestsServiceImpl extends ServiceImpl<TPartnershipReq
     @Override
     public TPartnershipRequests getByRequestId(Long requestId) {
         QueryWrapper<TPartnershipRequests> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",requestId);
+        queryWrapper.eq("id", requestId);
         return tPartnershipRequestsMapper.selectOne(queryWrapper);
     }
 }

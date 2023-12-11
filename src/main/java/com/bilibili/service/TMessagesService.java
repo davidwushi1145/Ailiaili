@@ -4,6 +4,7 @@ import com.bilibili.dao.domain.TMessages;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 下水道的小老鼠
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface TMessagesService extends IService<TMessages> {
 
-    List<Long> getIdList(Long userId);
+    Set<Long> getIdList(Long userId);
 
     List<TMessages> getChatList(Long userId, Long consumerId);
 }

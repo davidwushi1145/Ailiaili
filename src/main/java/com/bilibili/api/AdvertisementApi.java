@@ -3,6 +3,7 @@ package com.bilibili.api;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.*;
 import com.bilibili.dao.domain.exception.ConditionException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class AdvertisementApi {
@@ -61,6 +63,16 @@ public class AdvertisementApi {
             throw new ConditionException("参数异常");
         }
         tAdvertisementService.save(tAdvertisement);
+
+        //投放广告后，在性能表中插入
+        TAdPerformance tAdPerformance = new TAdPerformance();
+        tAdPerformance.setAdId(tAdvertisement.getId());
+        tAdPerformance.setClicks(0);
+        tAdPerformance.setImpressions(0);
+        tAdPerformance.setConversions(0);
+        tAdPerformance.setDate(new Date());
+        tAdPerformanceService.save(tAdPerformance);
+
         return new JsonResponse<>(tAdvertisement);
     }
 
@@ -75,8 +87,9 @@ public class AdvertisementApi {
     public JsonResponse<Boolean> impressionsAdvertisement(@RequestParam Long adId) {
         TAdPerformance tAdPerformance = tAdPerformanceService.getByAdId(adId);
         tAdPerformance.setImpressions(tAdPerformance.getImpressions() + 1);
-        tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getConversions());
-        tAdPerformanceService.save(tAdPerformance);
+        tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getImpressions());
+        tAdPerformance.setDate(new Date());
+        tAdPerformanceService.update(tAdPerformance,new QueryWrapper<TAdPerformance>().eq("ad_id",adId));
         return new JsonResponse<>(true);
     }
 
@@ -84,9 +97,10 @@ public class AdvertisementApi {
     @PostMapping("/click-advertisement")
     public JsonResponse<Boolean> clickAdvertisement(@RequestParam Long adId) {
         TAdPerformance tAdPerformance = tAdPerformanceService.getByAdId(adId);
-        tAdPerformance.setImpressions(tAdPerformance.getClicks() + 1);
-        tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getConversions());
-        tAdPerformanceService.save(tAdPerformance);
+        tAdPerformance.setClicks(tAdPerformance.getClicks() + 1);
+        tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getImpressions());
+        tAdPerformance.setDate(new Date());
+        tAdPerformanceService.update(tAdPerformance,new QueryWrapper<TAdPerformance>().eq("ad_id",adId));
         return new JsonResponse<>(true);
     }
 
@@ -168,7 +182,7 @@ public class AdvertisementApi {
 
     //获取当前用户的聊天列表
     @GetMapping("/getIdList")
-    public JsonResponse<List<Long>> getIdList() {
+    public JsonResponse<Set<Long>> getIdList() {
         Long userId = userSupport.getCurrentUserId();
         return new JsonResponse<>(tMessagesService.getIdList(userId));
     }

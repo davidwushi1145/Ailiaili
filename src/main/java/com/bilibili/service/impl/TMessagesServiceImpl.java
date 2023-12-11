@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 下水道的小老鼠
@@ -24,24 +26,24 @@ public class TMessagesServiceImpl extends ServiceImpl<TMessagesMapper, TMessages
     private TMessagesMapper tMessagesMapper;
 
     @Override
-    public List<Long> getIdList(Long userId) {
-        List<Long> list = new ArrayList<>();
+    public Set<Long> getIdList(Long userId) {
+        Set<Long> set = new HashSet<>();
         List<TMessages> temp = new ArrayList<>();
         QueryWrapper<TMessages> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("sender_id", userId);
         temp = tMessagesMapper.selectList(queryWrapper1);
         for (TMessages tMessages : temp) {
-            list.add(tMessages.getReceiverId());
+            set.add(tMessages.getReceiverId());
         }
 
         QueryWrapper<TMessages> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("receiver_id", userId);
-        temp = tMessagesMapper.selectList(queryWrapper1);
+        temp = tMessagesMapper.selectList(queryWrapper2);
         for (TMessages tMessages : temp) {
-            list.add(tMessages.getSenderId());
+            set.add(tMessages.getSenderId());
         }
 
-        return list;
+        return set;
     }
 
     @Override

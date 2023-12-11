@@ -32,9 +32,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File>
 
     private final String VIDEO_FILE_NAME = "bilibili/";
 
-    private final String ADVERTISEMENT_FILE_NAME = "bilibili/advertisement";
+    private final String ADVERTISEMENT_FILE_NAME = "bilibili/advertisement/";
 
-    private final String THUMBNAIL_FILE_NAME = "bilibili/thumbnail";
+    private final String THUMBNAIL_FILE_NAME = "bilibili/thumbnail/";
 
     //小文件上传
     @Override
