@@ -152,7 +152,8 @@ public class AdvertisementApi {
     }
 
     //发送消息
-    public JsonResponse<Boolean> sendMessage(@RequestParam Long consumerId, String message) {
+    @PostMapping("/sentMessage")
+    public JsonResponse<Boolean> sendMessage(@RequestParam Long consumerId, @RequestParam String message) {
 
         Long producerId = userSupport.getCurrentUserId();
 
@@ -166,7 +167,18 @@ public class AdvertisementApi {
     }
 
     //获取当前用户的聊天列表
+    @GetMapping("/getIdList")
+    public JsonResponse<List<Long>> getIdList() {
+        Long userId = userSupport.getCurrentUserId();
+        return new JsonResponse<>(tMessagesService.getIdList(userId));
+    }
 
     //获取当前用户语某个用户消息
+    @GetMapping("/getChatList")
+    public JsonResponse<List<TMessages>> getChatList(@RequestParam Long consumerId) {
+        Long userId = userSupport.getCurrentUserId();
+        List<TMessages> tMessages = tMessagesService.getChatList(userId, consumerId);
 
+        return new JsonResponse<>(tMessages);
+    }
 }
