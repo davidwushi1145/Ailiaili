@@ -18,9 +18,8 @@ public class FileApi {
     @Autowired
     private FileService fileService;
 
-
-    //上传文件+秒传
-    @PutMapping("/file-slices")
+    //上传视频文件+秒传
+    @PutMapping("/file-video-slices")
     public JsonResponse<String> uploadFileBySlices(MultipartFile slice,
                                                    String fileMD5,
                                                    Integer sliceNumber,
@@ -29,11 +28,33 @@ public class FileApi {
         return new JsonResponse<>(filePath);
     }
 
-    //删除文件
-    @DeleteMapping("/file-delete")
+    //删除视频文件
+    @DeleteMapping("/file-video-delete")
     public JsonResponse<String> deleteFile(String filePath) {
-        fileService.deleteFile(filePath);
+        fileService.deleteVideoFile(filePath);
         return new JsonResponse<>("删除成功！");
+    }
+
+
+    //上传广告文件
+    @PutMapping("file-advertisement")
+    public JsonResponse<Long> uploadAdvertisementFile(MultipartFile file, String fileMD5) throws IOException {
+        Long contentId = fileService.uploadAdvertisementFile(file, fileMD5);
+        return new JsonResponse<>(contentId);
+    }
+
+    //删除广告文件
+    @DeleteMapping("/file-advertisement-delete")
+    public JsonResponse<String> deleteAdvertisementFile(String filePath) {
+        fileService.deleteAdvertisementFile(filePath);
+        return new JsonResponse<>("删除成功！");
+    }
+
+    //上传视频封面
+    @PutMapping("/file-thumbnail")
+    public JsonResponse<String> uploadThumbnailFile(MultipartFile file, String fileMD5) throws IOException {
+        String path = fileService.uploadThumbnailFile(file, fileMD5);
+        return new JsonResponse<>(path);
     }
 
     @PostMapping("/md5files")
@@ -41,6 +62,5 @@ public class FileApi {
         String fileMD5 = fileService.getFileMD5(file);
         return new JsonResponse<>(fileMD5);
     }
-
 
 }

@@ -14,7 +14,13 @@ public interface FileService extends IService<File> {
 
     String uploadFileBySlices(MultipartFile slice, String fileMD5, Integer sliceNumber, Integer totalSliceNumber) throws IOException;
 
-    void deleteFile(String filePath);
+    Long uploadAdvertisementFile(MultipartFile slice, String fileMD5) throws IOException;
+
+    String uploadThumbnailFile(MultipartFile file, String fileMD5) throws IOException;
+
+    void deleteVideoFile(String filePath);
 
     String getFileMD5(MultipartFile file) throws IOException;
+
+    void deleteAdvertisementFile(String filePath);
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilibili.dao.mapper.TAdvertisementMapper">
+
+    <resultMap id="BaseResultMap" type="com.bilibili.dao.domain.TAdvertisement">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="advertiserId" column="advertiser_id" jdbcType="BIGINT"/>
+            <result property="contentId" column="content_id" jdbcType="BIGINT"/>
+            <result property="adSpaceId" column="ad_space_id" jdbcType="BIGINT"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="advertisementPath" column="advertisement_path" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,advertiser_id,content_id,
+        ad_space_id,start_time,end_time,
+        status,create_time,update_time,advertisement_path
+    </sql>
+</mapper>
