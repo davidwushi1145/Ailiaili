@@ -160,7 +160,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (dbUser == null) {
             throw new ConditionException("当前用户不存在");
         }
-        String userPassword = user.getUserPassword();
+//        String userPassword = user.getUserPassword();
+        String userPassword;
+        userPassword = RSAUtil.encrypt(user.getUserPassword());
         String rawPassword;
         try {
             rawPassword = RSAUtil.decrypt(userPassword);
