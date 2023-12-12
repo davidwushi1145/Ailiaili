@@ -15,7 +15,7 @@
     <description>bilibili</description>
     <properties>
         <java.version>1.8</java.version>
-        <elasticsearch.version>7.12.1</elasticsearch.version>
+        <elasticsearch.version>7.13.1</elasticsearch.version>
     </properties>
     <dependencies>
         <dependency>
