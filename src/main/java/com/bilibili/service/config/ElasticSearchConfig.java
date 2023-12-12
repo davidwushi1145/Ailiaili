@@ -11,14 +11,13 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 @Configuration
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${spring.elasticsearch.url}")
-    private String esUrl;
+  @Value("${spring.elasticsearch.url}") private String esUrl;
 
-    @Override
-    @Bean
-    public RestHighLevelClient elasticsearchClient(){
-        RestHighLevelClient restHighLevelClient = new RestHighLevelClient(RestClient.builder(
-                new HttpHost(esUrl, 9200, "http")));
-        return restHighLevelClient;
-    }
+  @Override
+  @Bean
+  public RestHighLevelClient elasticsearchClient() {
+    RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
+        RestClient.builder(new HttpHost(esUrl, 9200, "http")));
+    return restHighLevelClient;
+  }
 }
