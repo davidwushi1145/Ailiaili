@@ -285,4 +285,3 @@ CREATE TABLE IF NOT EXISTS bilibili.t_video_view (
     create_time datetime DEFAULT CURRENT_TIMESTAMP NULL comment '创建时间',
     CONSTRAINT fk_video_view_user_id FOREIGN KEY (user_id) REFERENCES bilibili.t_user (id),
     CONSTRAINT fk_video_view_video_id FOREIGN KEY (video_id) REFERENCES bilibili.t_video (id)) comment '视频观看记录表' charset = utf8;
-
