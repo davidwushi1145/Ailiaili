@@ -6,9 +6,12 @@ import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.dao.domain.PageResult;
 import com.bilibili.dao.domain.User;
 import com.bilibili.dao.domain.UserInfo;
+import com.bilibili.service.UserCoinService;
 import com.bilibili.service.UserFollowingService;
 import com.bilibili.service.UserService;
 import com.bilibili.service.util.RSAUtil;
+import io.swagger.models.auth.In;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +31,9 @@ public class UserApi {
 
     @Autowired
     private UserFollowingService userFollowingService;
+
+    @Autowired
+    private UserCoinService userCoinService;
 
     @GetMapping("/users")
     public JsonResponse<User> getUserInfo() {
@@ -112,6 +118,27 @@ public class UserApi {
         String refreshToken = request.getHeader("refreshToken");
         String accessToken = userService.refreshAccessToken(refreshToken);
         return new JsonResponse<>(accessToken);
+    }
+
+    //获取用户硬币数量
+    @GetMapping("/getUserCoins")
+    public JsonResponse<Long> getUserCoins() {
+        Long userId = userSupport.getCurrentUserId();
+        return new JsonResponse<>(userCoinService.getUserCoinAmount(userId));
+    }
+
+    //获取用户粉丝数
+    @GetMapping("/getFollowers")
+    public JsonResponse<Integer> getFollowers() {
+        Long userId = userSupport.getCurrentUserId();
+        return new JsonResponse<>(userFollowingService.getUserFans(userId).size());
+    }
+
+    //获取用户关注数
+    @GetMapping("/getUserFollowing")
+    public JsonResponse<Integer> getUserFollowing() {
+        Long userId = userSupport.getCurrentUserId();
+        return new JsonResponse<>(userFollowingService.getFollowingsNumber(userId));
     }
 
 }

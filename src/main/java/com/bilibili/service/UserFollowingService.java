@@ -41,4 +41,7 @@ public interface UserFollowingService extends IService<UserFollowing> {
     List<FollowingGroup> getUserFollowingGroups(Long userId);
 
     List<UserInfo> checkFollowingStatus(List<UserInfo> list, Long userId);
+
+    //获取用户关注的数量
+    int getFollowingsNumber(Long userId);
 }
