@@ -42,7 +42,7 @@ public class UserApi {
         return new JsonResponse<>(user);
     }
 
-    //    获取rsa公钥
+    //获取rsa公钥
     @GetMapping("/rsa-pks")
     public JsonResponse<String> getRsaPublicKey() {
         String publicKeyStr = RSAUtil.getPublicKeyStr();
@@ -141,4 +141,10 @@ public class UserApi {
         return new JsonResponse<>(userFollowingService.getFollowingsNumber(userId));
     }
 
+    //根据userId获取用户信息
+    @GetMapping("/getUserInfoByUserId")
+    public JsonResponse<UserInfo> getUserInfoByUserId(Long userId) {
+        User user = userService.getUserInfo(userId);
+        return new JsonResponse<>(user.getUserInfo());
+    }
 }

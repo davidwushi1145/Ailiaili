@@ -117,6 +117,7 @@ public class UserFollowingServiceImpl extends ServiceImpl<UserFollowingMapper, U
         List<FollowingGroup> groupList = followingGroupService.getByUserId(userId);
         //全部关注分组构建
         FollowingGroup allGroup = new FollowingGroup();
+        allGroup.setId((long) -1);
         allGroup.setName(UserConstant.USER_FOLLOWING_GROUP_ALL_NAME);
         allGroup.setFollowingUserInfoList(userInfoList);
         List<FollowingGroup> result = new ArrayList<>();

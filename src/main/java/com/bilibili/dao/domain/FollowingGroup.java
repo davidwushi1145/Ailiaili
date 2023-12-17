@@ -44,7 +44,7 @@ public class FollowingGroup implements Serializable {
     private Date createTime;
 
     /**
-     * 关注分组类型：0特别关注，1悄悄关注，2默认关注，3用户自定义关注
+     * 关注分组类型：0特别关注，1 悄悄关注，2 默认关注，3 用户自定义关注
      */
     private String type;
 
