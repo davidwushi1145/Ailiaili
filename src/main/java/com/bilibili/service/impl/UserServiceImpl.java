@@ -93,7 +93,6 @@ public class UserServiceImpl
       throw new ConditionException("当前用户不存在");
     }
     String userPassword = user.getUserPassword();
-    userPassword = RSAUtil.encrypt(userPassword);
     String rawPassword;
     try {
       rawPassword = RSAUtil.decrypt(userPassword);
