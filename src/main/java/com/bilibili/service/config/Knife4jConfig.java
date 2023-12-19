@@ -13,21 +13,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableSwagger2WebMvc
 public class Knife4jConfig {
 
-    @Bean(value = "dockerBean")
-    public Docket dockerBean() {
-        //指定使用Swagger2规范
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(new ApiInfoBuilder()
-                        //描述字段支持Markdown语法
-                        .description("# Bilibili Api")
-                        .version("1.0")
-                        .build())
-                //分组名称
-                .groupName("用户服务")
-                .select()
-                //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("com.bilibili.api"))
-                .paths(PathSelectors.any())
-                .build();
-    }
+  @Bean(value = "dockerBean")
+  public Docket dockerBean() {
+    // 指定使用Swagger2规范
+    return new Docket(DocumentationType.SWAGGER_2)
+        .apiInfo(new ApiInfoBuilder()
+                     // 描述字段支持Markdown语法
+                     .description("# Bilibili Api")
+                     .version("1.0")
+                     .build())
+        // 分组名称
+        .groupName("bilibili")
+        .select()
+        // 这里指定Controller扫描包路径
+        .apis(RequestHandlerSelectors.basePackage("com.bilibili.api"))
+        .paths(PathSelectors.any())
+        .build();
+  }
 }
