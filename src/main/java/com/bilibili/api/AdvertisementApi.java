@@ -10,6 +10,8 @@ import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,11 @@ public class AdvertisementApi {
     @Autowired
     private TMessagesService tMessagesService;
 
+    @Autowired
+    private ElasticSearchService elasticSearchService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdvertisementApi.class);
+
     //获取广告位信息
     @GetMapping("/get-adSpaceList")
     public JsonResponse<List<TAdSpace>> getAdSpaceList() {
@@ -51,6 +58,8 @@ public class AdvertisementApi {
     //购买广告位，并投放广告
     @PostMapping("/buy-advertisement-space")
     public JsonResponse<TAdvertisement> buyAdvertisementSpace(@RequestBody TAdvertisement tAdvertisement) {
+        logger.debug("Entering buyAdvertisementSpace method with TAdvertisement: {}", tAdvertisement);
+
         Long userId = userSupport.getCurrentUserId();
         tAdvertisement.setAdvertiserId(userId);
         if (ObjectUtils.allNull(tAdvertisement.getContentId())) {
@@ -72,7 +81,8 @@ public class AdvertisementApi {
         tAdPerformance.setConversions(0);
         tAdPerformance.setDate(new Date());
         tAdPerformanceService.save(tAdPerformance);
-
+        elasticSearchService.addAdPerformance(tAdPerformanceService.getById(tAdPerformance.getId()));
+        logger.debug("Exiting buyAdvertisementSpace method with JsonResponse: {}", tAdvertisement);
         return new JsonResponse<>(tAdvertisement);
     }
 
@@ -89,7 +99,8 @@ public class AdvertisementApi {
         tAdPerformance.setImpressions(tAdPerformance.getImpressions() + 1);
         tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getImpressions());
         tAdPerformance.setDate(new Date());
-        tAdPerformanceService.update(tAdPerformance,new QueryWrapper<TAdPerformance>().eq("ad_id",adId));
+        tAdPerformanceService.update(tAdPerformance, new QueryWrapper<TAdPerformance>().eq("ad_id", adId));
+        elasticSearchService.updateAdPerformance(tAdPerformanceService.getById(tAdPerformance.getId()));
         return new JsonResponse<>(true);
     }
 
@@ -100,7 +111,8 @@ public class AdvertisementApi {
         tAdPerformance.setClicks(tAdPerformance.getClicks() + 1);
         tAdPerformance.setConversions(tAdPerformance.getClicks() / tAdPerformance.getImpressions());
         tAdPerformance.setDate(new Date());
-        tAdPerformanceService.update(tAdPerformance,new QueryWrapper<TAdPerformance>().eq("ad_id",adId));
+        tAdPerformanceService.update(tAdPerformance, new QueryWrapper<TAdPerformance>().eq("ad_id", adId));
+        elasticSearchService.updateAdPerformance(tAdPerformanceService.getById(tAdPerformance.getId()));
         return new JsonResponse<>(true);
     }
 

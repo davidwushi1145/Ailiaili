@@ -20,7 +20,7 @@ import java.util.List;
  */
 @TableName(value ="t_video")
 @Data
-@Document(indexName = "videos" , createIndex = true)
+@Document(indexName = "videos")
 public class Video implements Serializable {
     /**
      * 主键id

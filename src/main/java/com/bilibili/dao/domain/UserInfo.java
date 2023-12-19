@@ -31,6 +31,7 @@ public class UserInfo implements Serializable {
     /**
      * 用户id（关联）
      */
+    @Field(type = FieldType.Long)
     private Long userId;
 
     /**

@@ -1,7 +1,9 @@
 package com.bilibili.service.impl;
 
+import com.bilibili.dao.domain.TAdPerformance;
 import com.bilibili.dao.domain.UserInfo;
 import com.bilibili.dao.domain.Video;
+import com.bilibili.dao.repository.AdPerformanceRepository;
 import com.bilibili.dao.repository.UserInfoRepository;
 import com.bilibili.dao.repository.VideoRepository;
 import com.bilibili.service.ElasticSearchService;
@@ -38,6 +40,9 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     private UserInfoRepository userInfoRepository;
 
     @Autowired
+    private AdPerformanceRepository adPerformanceRepository;
+
+    @Autowired
     private RestHighLevelClient restHighLevelClient;
 
     @Override
@@ -66,8 +71,50 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     }
 
     @Override
+    public void updateUserInfo(UserInfo userInfo) {
+        if (userInfo != null && userInfo.getId() != null) {
+            if (userInfoRepository.existsById(userInfo.getId())) {
+                userInfoRepository.save(userInfo);
+            } else {
+                throw new IllegalArgumentException("UserInfo with id " + userInfo.getId() + " does not exist");
+            }
+        } else {
+            throw new IllegalArgumentException("UserInfo or id cannot be null");
+        }
+    }
+
+    @Override
+    public void addAdPerformance(TAdPerformance adPerformance) {
+        adPerformanceRepository.save(adPerformance);
+    }
+
+    @Override
+    public void deleteAllAdPerformances() {
+        adPerformanceRepository.deleteAll();
+    }
+
+    @Override
+    public void updateAdPerformance(TAdPerformance adPerformance) {
+        if (adPerformance != null && adPerformance.getAdId() != null) {
+            if (adPerformanceRepository.existsById(adPerformance.getAdId())) {
+                adPerformanceRepository.save(adPerformance);
+            } else {
+                throw new IllegalArgumentException("AdPerformance with adId " + adPerformance.getAdId() + " does not exist");
+            }
+        } else {
+            throw new IllegalArgumentException("AdPerformance or adId cannot be null");
+        }
+    }
+
+    @Override
+    public TAdPerformance getAdPerformance(String keyword) {
+        return adPerformanceRepository.findByAdId(Long.parseLong(keyword));
+    }
+
+
+    @Override
     public List<Map<String,Object>> getContents(String keyword, Integer pageNumber, Integer pageSize) throws IOException {
-        String[] indexes = {"videos","userinfos"};
+        String[] indexes = {"videos","userinfos","adperformances"};
         SearchRequest searchRequest = new SearchRequest(indexes);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(pageSize);
