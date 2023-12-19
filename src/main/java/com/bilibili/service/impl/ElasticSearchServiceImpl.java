@@ -56,6 +56,19 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     }
 
     @Override
+    public void updateVideo(Video video) {
+        if (video != null && video.getId() != null) {
+            if (videoRepository.existsById(video.getId())) {
+                videoRepository.save(video);
+            } else {
+                throw new IllegalArgumentException("Video with id " + video.getId() + " does not exist");
+            }
+        } else {
+            throw new IllegalArgumentException("Video or id cannot be null");
+        }
+    }
+
+    @Override
     public void deleteAllVideos(){
         videoRepository.deleteAll();
     }
@@ -114,7 +127,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     @Override
     public List<Map<String,Object>> getContents(String keyword, Integer pageNumber, Integer pageSize) throws IOException {
-        String[] indexes = {"videos","userinfos","adperformances"};
+        String[] indexes = {"videos","userinfos","tadperformance"};
         SearchRequest searchRequest = new SearchRequest(indexes);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(pageSize);

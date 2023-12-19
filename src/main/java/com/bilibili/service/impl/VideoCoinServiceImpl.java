@@ -31,20 +31,17 @@ public class VideoCoinServiceImpl extends ServiceImpl<VideoCoinMapper, VideoCoin
     @Autowired
     private VideoService videoService;
 
-    @Autowired
-    private VideoCoinMapper videoCoinMapper;
-
     @Override
     @Transactional
     public void addVideoCions(VideoCoin videoCoin, Long userId) {
         if(videoCoin ==null ||videoCoin.getVideoId()==null){
             throw new ConditionException("参数异常！");
         }
-        Video video = videoService.getById(videoCoin.getVideoId());
+        Long videoId = videoCoin.getVideoId();
+        Video video = videoService.getById(videoId);
         if(video==null){
             throw new ConditionException("非法视频！");
         }
-        Long videoId = videoCoin.getVideoId();
         Integer amount = videoCoin.getAmount();
         if(amount !=1 && amount!=2){
             throw new ConditionException("参数异常！");
@@ -70,6 +67,10 @@ public class VideoCoinServiceImpl extends ServiceImpl<VideoCoinMapper, VideoCoin
         }
         //更新用户硬币数量
         userCoinService.updateUserCoinAmount(userId,userCoinAmount-amount);
+        // Increase the coin count
+        video.setCoins(video.getCoins() + amount);
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
@@ -91,12 +92,20 @@ public class VideoCoinServiceImpl extends ServiceImpl<VideoCoinMapper, VideoCoin
 
     @Override
     public Map<String, Object> getVideoCoins(Long videoId, Long userId) {
-        Long count = videoCoinMapper.getVideoCoins(videoId);
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Get the coin count from the video
+        int count = video.getCoins();
+
+        // Check if the user has given coins to the video
         VideoCoin videoCoin = this.getCoinByVideoIdAndUserId(videoId, userId);
-        boolean like = videoCoin !=null;
-        Map<String,Object> map = new HashMap<>();
-        map.put("count",count);
-        map.put("like",like);
+        boolean given = videoCoin != null;
+
+        // Return the result
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", count);
+        map.put("given", given);
         return map;
     }
 }

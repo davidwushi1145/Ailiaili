@@ -42,6 +42,10 @@ public class VideoLikeServiceImpl extends ServiceImpl<VideoLikeMapper, VideoLike
         videoLike.setUserId(userId);
         videoLike.setVideoId(videoId);
         this.save(videoLike);
+        // Increase the like count
+        video.setLikes(video.getLikes() + 1);
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
@@ -50,20 +54,35 @@ public class VideoLikeServiceImpl extends ServiceImpl<VideoLikeMapper, VideoLike
         queryWrapper.eq("user_id",userId);
         queryWrapper.eq("video_id",videoId);
         this.remove(queryWrapper);
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Decrease the like count
+        video.setLikes(video.getLikes() - 1);
+
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
     public Map<String, Object> getVideoLike(Long videoId, Long userId) {
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Get the like count from the video
+        int count = video.getLikes();
+
+        // Check if the user has liked the video
         QueryWrapper<VideoLike> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("video_id",videoId);
-        int count = (int) this.count(queryWrapper);
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("video_id", videoId);
+        queryWrapper.eq("user_id", userId);
         VideoLike videoLike = this.getOne(queryWrapper);
-        //判断用户是否点赞过
-        boolean like = videoLike !=null;
-        Map<String,Object> map = new HashMap<>();
-        map.put("count",count);
-        map.put("like",like);
+        boolean like = videoLike != null;
+
+        // Return the result
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", count);
+        map.put("like", like);
         return map;
     }
 }

@@ -57,7 +57,7 @@ public class TAdPerformance implements Serializable {
      * 日期
      */
     @TableField(value = "date")
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Long)
     private Date date;
 
     /**

@@ -50,6 +50,11 @@ public class VideoCollectionServiceImpl extends ServiceImpl<VideoCollectionMappe
         //添加新的视频收藏
         videoCollection.setUserId(userId);
         this.save(videoCollection);
+        // Increase the collection count
+        video.setCollections(video.getCollections() + 1);
+
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
@@ -58,19 +63,35 @@ public class VideoCollectionServiceImpl extends ServiceImpl<VideoCollectionMappe
         queryWrapper.eq("video_id",videoId);
         queryWrapper.eq("user_id",userId);
         this.remove(queryWrapper);
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Decrease the collection count
+        video.setCollections(video.getCollections() - 1);
+
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
     public Map<String, Object> getVideoCollections(Long videoId, Long userId) {
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Get the collection count from the video
+        int count = video.getCollections();
+
+        // Check if the user has collected the video
         QueryWrapper<VideoCollection> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("video_id",videoId);
-        int count = (int) this.count(queryWrapper);
-        queryWrapper.eq("user_id",userId);
+        queryWrapper.eq("video_id", videoId);
+        queryWrapper.eq("user_id", userId);
         VideoCollection videoCollection = this.getOne(queryWrapper);
-        boolean like = videoCollection !=null;
-        Map<String,Object> map = new HashMap<>();
-        map.put("count",count);
-        map.put("like",like);
+        boolean collected = videoCollection != null;
+
+        // Return the result
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", count);
+        map.put("collected", collected);
         return map;
     }
 }

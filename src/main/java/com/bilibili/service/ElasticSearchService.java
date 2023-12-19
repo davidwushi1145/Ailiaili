@@ -13,6 +13,8 @@ public interface ElasticSearchService {
 
     Video getVideo(String keyword);
 
+    void updateVideo(Video video);
+
     void deleteAllVideos();
 
     void addUserInfo(UserInfo userInfo);

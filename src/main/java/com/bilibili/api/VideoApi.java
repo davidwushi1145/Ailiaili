@@ -4,6 +4,7 @@ import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.*;
 import com.bilibili.service.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +42,18 @@ public class VideoApi {
     @Autowired
     private ElasticSearchService elasticSearchService;
 
+
+
     // 添加视频
     @PostMapping("/videos")
     public JsonResponse<String> addVideos(@RequestBody Video video) {
         Long userId = userSupport.getCurrentUserId();
         video.setUserId(userId);
+        video.setCreateTime(new Date());
+        video.setCoins(0);
+        video.setCollections(0);
+        video.setLikes(0);
+        video.setViews(0);
         videoService.addVideos(video);
         // 添加到es
         elasticSearchService.addVideo(videoService.getById(video.getId()));
@@ -73,6 +81,7 @@ public class VideoApi {
     public JsonResponse<String> addVideoLike(@RequestParam Long videoId) {
         Long userId = userSupport.getCurrentUserId();
         videoLikeService.addVideoLike(videoId, userId);
+        elasticSearchService.updateVideo(videoService.getById(videoId));
         return JsonResponse.success();
     }
 
@@ -81,6 +90,7 @@ public class VideoApi {
     public JsonResponse<String> deleteVideoLikes(@RequestParam Long videoId) {
         Long userId = userSupport.getCurrentUserId();
         videoLikeService.deleteVideoLike(videoId, userId);
+        elasticSearchService.updateVideo(videoService.getById(videoId));
         return JsonResponse.success();
     }
 
@@ -103,6 +113,7 @@ public class VideoApi {
     addVideoCollection(@RequestBody VideoCollection videoCollection) {
         Long userId = userSupport.getCurrentUserId();
         videoCollectionService.addVideoCollection(videoCollection, userId);
+        elasticSearchService.updateVideo(videoService.getById(videoCollection.getVideoId()));
         return JsonResponse.success();
     }
 
@@ -112,6 +123,7 @@ public class VideoApi {
     deleteVideoCollection(@RequestParam Long videoId) {
         Long userId = userSupport.getCurrentUserId();
         videoCollectionService.deleteVideoCollections(videoId, userId);
+        elasticSearchService.updateVideo(videoService.getById(videoId));
         return JsonResponse.success();
     }
 
@@ -134,6 +146,7 @@ public class VideoApi {
     public JsonResponse<String> addVideoCoins(@RequestBody VideoCoin videoCoin) {
         Long userId = userSupport.getCurrentUserId();
         videoCoinService.addVideoCions(videoCoin, userId);
+        elasticSearchService.updateVideo(videoService.getById(videoCoin.getVideoId()));
         return JsonResponse.success();
     }
 
@@ -186,6 +199,7 @@ public class VideoApi {
             userId = userSupport.getCurrentUserId();
             videoView.setUserId(userId);
             videoViewService.addVideoView(videoView, request);
+            elasticSearchService.updateVideo(videoService.getById(videoView.getVideoId()));
         } catch (Exception e) {
             videoViewService.addVideoView(videoView, request);
         }

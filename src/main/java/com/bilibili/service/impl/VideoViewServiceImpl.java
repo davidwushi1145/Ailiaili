@@ -2,8 +2,10 @@ package com.bilibili.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bilibili.dao.domain.Video;
 import com.bilibili.dao.domain.VideoView;
 import com.bilibili.dao.mapper.VideoViewMapper;
+import com.bilibili.service.VideoService;
 import com.bilibili.service.VideoViewService;
 import com.bilibili.service.util.IpUtil;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -26,6 +28,9 @@ public class VideoViewServiceImpl extends ServiceImpl<VideoViewMapper, VideoView
 
     @Autowired
     private VideoViewMapper videoViewMapper;
+    @Autowired
+    private VideoService videoService;
+
 
     @Override
     public void addVideoView(VideoView videoView, HttpServletRequest request) {
@@ -57,14 +62,25 @@ public class VideoViewServiceImpl extends ServiceImpl<VideoViewMapper, VideoView
             videoView1.setVideoId(videoId);
             this.save(videoView1);
         }
+
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Increase the view count
+        video.setViews(video.getViews() + 1);
+
+        // Update the video
+        videoService.updateById(video);
     }
 
     @Override
     public Integer getVideoViewCounts(Long videoId) {
-        QueryWrapper<VideoView> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("video_id",videoId);
-        int count = (int) this.count(queryWrapper);
-        return count;
+        // Get the video
+        Video video = videoService.getById(videoId);
+
+        // Get the view count from the video
+
+        return video.getViews();
     }
 
 }

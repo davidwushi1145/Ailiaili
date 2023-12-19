@@ -80,9 +80,10 @@ public class AdvertisementApi {
         tAdPerformance.setImpressions(0);
         tAdPerformance.setConversions(0);
         tAdPerformance.setDate(new Date());
+        tAdPerformance.setCreateTime(new Date());
         tAdPerformanceService.save(tAdPerformance);
-        elasticSearchService.addAdPerformance(tAdPerformanceService.getById(tAdPerformance.getId()));
-        logger.debug("Exiting buyAdvertisementSpace method with JsonResponse: {}", tAdvertisement);
+        elasticSearchService.addAdPerformance(tAdPerformance);
+        logger.debug("Exiting buyAdvertisementSpace method with JsonResponse: {}", tAdPerformance);
         return new JsonResponse<>(tAdvertisement);
     }
 

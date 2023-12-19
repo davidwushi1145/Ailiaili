@@ -90,6 +90,30 @@ public class Video implements Serializable {
     private Date updateTime;
 
     /**
+     * 投币数量
+     */
+    @Field(type = FieldType.Integer)
+    private Integer coins;
+
+    /**
+     * 点赞数量
+     */
+    @Field(type = FieldType.Integer)
+    private Integer likes;
+
+    /**
+     * 收藏数量
+     */
+    @Field(type = FieldType.Integer)
+    private Integer collections;
+
+    /**
+     * 播放数量
+     */
+    @Field(type = FieldType.Integer)
+    private Integer views;
+
+    /**
      * 标签列表
      */
     @TableField(exist = false)
