@@ -31,7 +31,7 @@ import java.util.Map;
 public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
     implements DanmuService {
 
-    public static final String DANMU_KEY = "dm-video-";
+    public static final String DANMU_KEY = "now-danmu-video-";
     @Autowired
     private VideoService videoService;
 
@@ -52,6 +52,7 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
         String key = DANMU_KEY + videoId;
         String value = redisTemplate.opsForValue().get(key);
         List<Danmu> list;
+        //如果redis里有最近查询过的弹幕，那就从redis里取
         if(StringUtils.isNotBlank(value)){
             list = JSONArray.parseArray(value, Danmu.class);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -79,7 +80,7 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
 
     @Override
     public void addDanmuToRedis(Danmu danmu) {
-        String key = "danmu-video-" + danmu.getVideoId();
+        String key = "new-danmu-video-" + danmu.getVideoId();
         String value = redisTemplate.opsForValue().get(key);
         List<Danmu> list;
         if(StringUtils.isNotBlank(value)){
@@ -91,6 +92,19 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
         }
         list.add(danmu);
         redisTemplate.opsForValue().set(key, JSONObject.toJSONString(list));
+
+        //把新发送弹幕放到old-danmu-video
+        key = DANMU_KEY + danmu.getVideoId();
+        value = redisTemplate.opsForValue().get(key);
+        List<Danmu> nowList = new ArrayList<>();
+        if(StringUtils.isNotBlank(value)){
+            nowList = JSONArray.parseArray(value,Danmu.class);
+            nowList.add(danmu);
+            redisTemplate.opsForValue().set(key,JSONObject.toJSONString(nowList));
+        }else{
+            nowList.add(danmu);
+            redisTemplate.opsForValue().set(key,JSONObject.toJSONString(nowList));
+        }
     }
 
 

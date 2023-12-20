@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bilibili.dao.domain.Video;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author 
 * @description 针对表【t_video(视频投稿记录表)】的数据库操作Mapper
@@ -11,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface VideoMapper extends BaseMapper<Video> {
-
+    List<String> getAllVideoIds();
 }
 
 
