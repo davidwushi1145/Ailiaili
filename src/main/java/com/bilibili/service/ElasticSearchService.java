@@ -1,35 +1,35 @@
 package com.bilibili.service;
 
+import com.bilibili.dao.domain.TAdPerformance;
 import com.bilibili.dao.domain.UserInfo;
 import com.bilibili.dao.domain.Video;
-import com.bilibili.dao.domain.TAdPerformance;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface ElasticSearchService {
-    void addVideo(Video video);
+  void addVideo(Video video);
 
-    Video getVideo(String keyword);
+  Video getVideo(String keyword);
 
-    void updateVideo(Video video);
+  void updateVideo(Video video);
 
-    void deleteAllVideos();
+  void deleteAllVideos();
 
-    void addUserInfo(UserInfo userInfo);
+  void addUserInfo(UserInfo userInfo);
 
-    void deleteAllUserInfos();
+  void deleteAllUserInfos();
 
-    void updateUserInfo(UserInfo userInfo);
+  void updateUserInfo(UserInfo userInfo);
 
-    void addAdPerformance(TAdPerformance adPerformance);
+  void addAdPerformance(TAdPerformance adPerformance);
 
-    void deleteAllAdPerformances();
+  void deleteAllAdPerformances();
 
-    void updateAdPerformance(TAdPerformance adPerformance);
+  void updateAdPerformance(TAdPerformance adPerformance);
 
-    TAdPerformance getAdPerformance(String keyword);
+  TAdPerformance getAdPerformance(String keyword);
 
-    List<Map<String,Object>> getContents(String keyword, Integer pageNumber, Integer pageSize) throws IOException;
+  List<Map<String, Object>> getContents(String keyword, Integer pageNumber,
+                                        Integer pageSize) throws IOException;
 }
