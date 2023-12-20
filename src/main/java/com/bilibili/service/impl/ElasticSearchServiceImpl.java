@@ -9,6 +9,8 @@ import com.bilibili.dao.repository.VideoRepository;
 import com.bilibili.service.ElasticSearchService;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
@@ -23,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -42,8 +41,13 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Autowired
     private AdPerformanceRepository adPerformanceRepository;
 
+    private final RestHighLevelClient client;
+
     @Autowired
-    private RestHighLevelClient restHighLevelClient;
+    public ElasticSearchServiceImpl(RestHighLevelClient client) {
+        this.client = client;
+    }
+
 
     @Override
     public void addVideo(Video video){
@@ -55,18 +59,28 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         return videoRepository.findByTitleLike(keyword);
     }
 
-    @Override
     public void updateVideo(Video video) {
-        if (video != null && video.getId() != null) {
-            if (videoRepository.existsById(video.getId())) {
-                videoRepository.save(video);
-            } else {
-                throw new IllegalArgumentException("Video with id " + video.getId() + " does not exist");
-            }
-        } else {
-            throw new IllegalArgumentException("Video or id cannot be null");
+        // 构建一个更新请求
+        UpdateRequest updateRequest = new UpdateRequest("videos", String.valueOf(video.getId()));
+        Map<String, Object> jsonMap = new HashMap<>();
+
+        jsonMap.put("likes", video.getLikes());
+        jsonMap.put("collections", video.getCollections());
+        jsonMap.put("coins", video.getCoins());
+        jsonMap.put("views", video.getViews());
+
+        updateRequest.doc(jsonMap);
+
+        try {
+            // 执行更新操作
+            UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
+            System.out.println(updateResponse.toString());
+            // 根据需要处理响应
+        } catch (IOException e) {
+            // 处理异常，记录日志
         }
     }
+
 
     @Override
     public void deleteAllVideos(){
@@ -85,14 +99,19 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     @Override
     public void updateUserInfo(UserInfo userInfo) {
-        if (userInfo != null && userInfo.getId() != null) {
-            if (userInfoRepository.existsById(userInfo.getId())) {
-                userInfoRepository.save(userInfo);
-            } else {
-                throw new IllegalArgumentException("UserInfo with id " + userInfo.getId() + " does not exist");
-            }
-        } else {
-            throw new IllegalArgumentException("UserInfo or id cannot be null");
+        // 构建一个更新请求
+        UpdateRequest updateRequest = new UpdateRequest("userinfos", String.valueOf(userInfo.getUserId()));
+        Map<String, Object> jsonMap = new HashMap<>();
+
+        updateRequest.doc(jsonMap);
+
+        try {
+            // 执行更新操作
+            UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
+            System.out.println(updateResponse.toString());
+            // 根据需要处理响应
+        } catch (IOException e) {
+            // 处理异常，记录日志
         }
     }
 
@@ -108,14 +127,23 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     @Override
     public void updateAdPerformance(TAdPerformance adPerformance) {
-        if (adPerformance != null && adPerformance.getAdId() != null) {
-            if (adPerformanceRepository.existsById(adPerformance.getAdId())) {
-                adPerformanceRepository.save(adPerformance);
-            } else {
-                throw new IllegalArgumentException("AdPerformance with adId " + adPerformance.getAdId() + " does not exist");
-            }
-        } else {
-            throw new IllegalArgumentException("AdPerformance or adId cannot be null");
+        // 构建一个更新请求
+        UpdateRequest updateRequest = new UpdateRequest("tadperformance", String.valueOf(adPerformance.getAdId()));
+        Map<String, Object> jsonMap = new HashMap<>();
+
+        jsonMap.put("clicks", adPerformance.getClicks());
+        jsonMap.put("impressions", adPerformance.getImpressions());
+        jsonMap.put("conversions", adPerformance.getConversions());
+
+        updateRequest.doc(jsonMap);
+
+        try {
+            // 执行更新操作
+            UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
+            System.out.println(updateResponse.toString());
+            // 根据需要处理响应
+        } catch (IOException e) {
+            // 处理异常，记录日志
         }
     }
 
@@ -148,7 +176,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         highlightBuilder.postTags("</span>");
         searchSourceBuilder.highlighter(highlightBuilder);
         //执行搜索
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         List<Map<String,Object>> arrayList = new ArrayList<>();
         for(SearchHit hit :searchResponse.getHits()){
             //处理高亮字段
