@@ -2,20 +2,15 @@ package com.bilibili.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bilibili.dao.domain.Video;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 /**
-* @author 
-* @description 针对表【t_video(视频投稿记录表)】的数据库操作Mapper
-* @Entity com.bilibili.dao.domain.Video
-*/
+ * @author
+ * @description 针对表【t_video(视频投稿记录表)】的数据库操作Mapper
+ * @Entity com.bilibili.dao.domain.Video
+ */
 @Mapper
 public interface VideoMapper extends BaseMapper<Video> {
-    List<String> getAllVideoIds();
+  List<String> getAllVideoIds();
 }
-
-
-
-
