@@ -6,6 +6,7 @@ import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.dao.domain.PageResult;
 import com.bilibili.dao.domain.User;
 import com.bilibili.dao.domain.UserInfo;
+import com.bilibili.service.ElasticSearchService;
 import com.bilibili.service.UserCoinService;
 import com.bilibili.service.UserFollowingService;
 import com.bilibili.service.UserService;
@@ -29,6 +30,8 @@ public class UserApi {
 
   @Autowired private UserCoinService userCoinService;
 
+  @Autowired private ElasticSearchService elasticSearchService;
+
   @GetMapping("/users")
   public JsonResponse<User> getUserInfo() {
     Long userId = userSupport.getCurrentUserId();
@@ -47,6 +50,7 @@ public class UserApi {
   @PostMapping("/users")
   public JsonResponse<String> addUser(@RequestBody User user) {
     userService.addUser(user);
+    elasticSearchService.addUserInfo(user.getUserInfo());
     return JsonResponse.success();
   }
 
@@ -70,6 +74,7 @@ public class UserApi {
     Long userId = userSupport.getCurrentUserId();
     userInfo.setUserId(userId);
     userService.updateUserInfos(userInfo);
+    elasticSearchService.updateUserInfo(userInfo);
     return JsonResponse.success();
   }
 
