@@ -196,6 +196,13 @@ public class VideoApi {
         List<Video> list = videoService.recommend(userId);
         return new JsonResponse<>(list);
     }
+
+    //获取视频根据videoId
+    @GetMapping("/getVideo")
+    public JsonResponse<Video> getVideo(Long videoId) {
+        Video video = videoService.getById(videoId);
+        return new JsonResponse<>(video);
+    }
 }
 
 

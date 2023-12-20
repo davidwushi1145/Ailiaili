@@ -57,6 +57,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     @Autowired
     private VideoOperationService videoOperationService;
 
+    @Autowired
+    private VideoMapper videoMapper;
+
     @Override
     @Transactional
     public void addVideos(Video video) {
@@ -126,6 +129,13 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
             return Collections.emptyList(); // 或者返回默认推荐视频列表
         }
         return this.listByIds(collect);
+    }
+
+    @Override
+    public List<String> getAllVideoId() {
+        List<String> result = new ArrayList<>();
+        result = videoMapper.getAllVideoIds();
+        return result;
     }
 
     private DataModel createDataModel(List<UserPreference> userPreferenceList) {

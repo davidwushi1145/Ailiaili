@@ -63,4 +63,11 @@ public class UserFollowingApi {
         List<FollowingGroup> list = userFollowingService.getUserFollowingGroups(userId);
         return new JsonResponse<>(list);
     }
+
+    //获取用户粉丝列表
+    @GetMapping("/getUserFansByUserId")
+    public JsonResponse<List<UserFollowing>> getFans(Long userId) {
+        List<UserFollowing> userFans = userFollowingService.getUserFans(userId);
+        return new JsonResponse<>(userFans);
+    }
 }

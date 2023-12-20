@@ -24,4 +24,7 @@
         duration,area,description,
         create_time,update_time
     </sql>
+    <select id="getAllVideoIds" resultType="java.lang.String">
+        SELECT id from t_video
+    </select>
 </mapper>

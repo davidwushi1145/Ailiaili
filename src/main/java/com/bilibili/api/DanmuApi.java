@@ -4,10 +4,9 @@ import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.Danmu;
 import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.service.DanmuService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -43,6 +42,17 @@ public class DanmuApi {
             list = danmuService.getDanmus(map);
         }
         return new JsonResponse<>(list);
+    }
+
+    @PostMapping("/addDanmu")
+    public JsonResponse<Boolean> addDanmu(@RequestBody Danmu danmu){
+        Long userId = userSupport.getCurrentUserId();
+        if (ObjectUtils.isEmpty(userId)){
+            return new JsonResponse<>(false);
+        }
+        danmu.setUserId(userId);
+        danmuService.addDanmuToRedis(danmu);
+        return new JsonResponse<>(true);
     }
 
 }
