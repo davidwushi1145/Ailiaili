@@ -138,6 +138,13 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return result;
     }
 
+    @Override
+    public List<Video> getVideosByUserId(Long userId) {
+        QueryWrapper<Video> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",userId);
+        return videoMapper.selectList(queryWrapper);
+    }
+
     private DataModel createDataModel(List<UserPreference> userPreferenceList) {
         FastByIDMap<PreferenceArray> fastByIdMap = new FastByIDMap<>();
         Map<Long, List<UserPreference>> map = userPreferenceList.stream().collect(Collectors.groupingBy(UserPreference::getUserId));

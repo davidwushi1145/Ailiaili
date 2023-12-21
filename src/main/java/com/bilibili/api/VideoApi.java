@@ -217,4 +217,11 @@ public class VideoApi {
     Video video = videoService.getById(videoId);
     return new JsonResponse<>(video);
   }
+
+  //查询用户发布的视频
+  @GetMapping("/getVideosByUserId")
+  public JsonResponse<List<Video>> getVideosByUserId(Long userId){
+    List<Video> videos = videoService.getVideosByUserId(userId);
+    return new JsonResponse<>(videos);
+  }
 }

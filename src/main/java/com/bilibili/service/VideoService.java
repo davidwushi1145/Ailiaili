@@ -28,4 +28,6 @@ public interface VideoService extends IService<Video> {
     List<Video> recommend(Long userId) throws TasteException;
 
     List<String> getAllVideoId();
+
+    List<Video> getVideosByUserId(Long userId);
 }
