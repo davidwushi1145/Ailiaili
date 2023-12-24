@@ -209,8 +209,8 @@ public class UserFollowingServiceImpl
   @Override
   public Boolean getIsFollow(Long userId, Long followUserId) {
     QueryWrapper<UserFollowing> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("user_id",userId);
-    queryWrapper.eq("following_id",followUserId);
+    queryWrapper.eq("user_id", userId);
+    queryWrapper.eq("following_id", followUserId);
     UserFollowing userFollowing = userFollowingMapper.selectOne(queryWrapper);
     return !(userFollowing == null);
   }
@@ -218,8 +218,8 @@ public class UserFollowingServiceImpl
   @Override
   public Boolean deleteFollow(Long userId, Long followUserId) {
     QueryWrapper<UserFollowing> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("user_id",userId);
-    queryWrapper.eq("following_id",followUserId);
+    queryWrapper.eq("user_id", userId);
+    queryWrapper.eq("following_id", followUserId);
     int flag = userFollowingMapper.delete(queryWrapper);
     return flag == 1;
   }

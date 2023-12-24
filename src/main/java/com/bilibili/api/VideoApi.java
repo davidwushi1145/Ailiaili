@@ -83,7 +83,8 @@ public class VideoApi {
 
   // 查询视频点赞数量
   @GetMapping("video-likes")
-  public JsonResponse<Map<String, Object>> getVideoLikes(@RequestParam Long videoId) {
+  public JsonResponse<Map<String, Object>>
+  getVideoLikes(@RequestParam Long videoId) {
     Long userId = null;
     try {
       userId = userSupport.getCurrentUserId();
@@ -216,9 +217,9 @@ public class VideoApi {
     return new JsonResponse<>(video);
   }
 
-  //查询用户发布的视频
+  // 查询用户发布的视频
   @GetMapping("/getVideosByUserId")
-  public JsonResponse<List<Video>> getVideosByUserId(Long userId){
+  public JsonResponse<List<Video>> getVideosByUserId(Long userId) {
     List<Video> videos = videoService.getVideosByUserId(userId);
     return new JsonResponse<>(videos);
   }
