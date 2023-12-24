@@ -205,4 +205,22 @@ public class UserFollowingServiceImpl
     List<UserFollowing> list = userFollowingMapper.selectList(queryWrapper);
     return list.size();
   }
+
+  @Override
+  public Boolean getIsFollow(Long userId, Long followUserId) {
+    QueryWrapper<UserFollowing> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("user_id", userId);
+    queryWrapper.eq("following_id", followUserId);
+    UserFollowing userFollowing = userFollowingMapper.selectOne(queryWrapper);
+    return !(userFollowing == null);
+  }
+
+  @Override
+  public Boolean deleteFollow(Long userId, Long followUserId) {
+    QueryWrapper<UserFollowing> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("user_id", userId);
+    queryWrapper.eq("following_id", followUserId);
+    int flag = userFollowingMapper.delete(queryWrapper);
+    return flag == 1;
+  }
 }
