@@ -18,7 +18,6 @@ public class UserSupport {
         // 去掉 "Bearer " 前缀
         String token = authHeader.substring(7);
         Long userId = TokenUtil.verifyToken(token);
-
         if (userId < 0) {
             throw new ConditionException("非法用户！");
         }

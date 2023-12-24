@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.ListView;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -84,8 +83,7 @@ public class VideoApi {
 
   // 查询视频点赞数量
   @GetMapping("video-likes")
-  public JsonResponse<Map<String, Object>>
-  getVideoLikes(@RequestParam Long videoId) {
+  public JsonResponse<Map<String, Object>> getVideoLikes(@RequestParam Long videoId) {
     Long userId = null;
     try {
       userId = userSupport.getCurrentUserId();

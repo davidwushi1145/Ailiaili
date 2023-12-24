@@ -6,10 +6,7 @@ import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.dao.domain.UserFollowing;
 import com.bilibili.service.UserFollowingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,14 @@ public class UserFollowingApi {
         userFollowing.setUserId(userId);
         userFollowingService.addUserFollowings(userFollowing);
         return JsonResponse.success();
+    }
+
+    //取消关注
+    @DeleteMapping("delete-following")
+    public JsonResponse<Boolean> deleteFollowing(Long followUserId) {
+        Long userId = userSupport.getCurrentUserId();
+        boolean flag = userFollowingService.deleteFollow(userId,followUserId);
+        return new JsonResponse<>(flag);
     }
 
     //获取用户关注列表
@@ -69,5 +74,13 @@ public class UserFollowingApi {
     public JsonResponse<List<UserFollowing>> getFans(Long userId) {
         List<UserFollowing> userFans = userFollowingService.getUserFans(userId);
         return new JsonResponse<>(userFans);
+    }
+
+    //适配前端 查看某个用户是不是已经被当前用户关注
+    @GetMapping("/getIsFollow")
+    public JsonResponse<Boolean> getIsFollow(Long followUserId){
+        Long userId = userSupport.getCurrentUserId();
+        boolean flag = userFollowingService.getIsFollow(userId,followUserId);
+        return new JsonResponse<>(flag);
     }
 }

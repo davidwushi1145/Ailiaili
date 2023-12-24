@@ -44,4 +44,8 @@ public interface UserFollowingService extends IService<UserFollowing> {
 
     //获取用户关注的数量
     int getFollowingsNumber(Long userId);
+
+    Boolean getIsFollow(Long userId,Long followUserId);
+
+    Boolean deleteFollow(Long userId,Long followUserId);
 }
