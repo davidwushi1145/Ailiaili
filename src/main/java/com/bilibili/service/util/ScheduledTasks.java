@@ -39,6 +39,7 @@ public class ScheduledTasks {
                     saveDanmuToDatabase(danmu);
                 }
             }
+            redisTemplate.delete(key);
         }
     }
 
