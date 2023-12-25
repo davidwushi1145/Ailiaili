@@ -247,7 +247,25 @@ public class UserServiceImpl
   @Override
   public List<User> getAllUser() {
     QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("pass", 1);
     return this.list(queryWrapper);
+  }
+
+  @Override
+  public void updateUser(User user) throws Exception {
+    String rawPassword = user.getUserPassword();
+    rawPassword = RSAUtil.encrypt(rawPassword);
+    String encryptedPassword;
+    try {
+      encryptedPassword = RSAUtil.decrypt(rawPassword);
+    } catch (Exception e) {
+      throw new ConditionException("数据解析异常！");
+    }
+    String salt = this.getById(user.getId()).getSalt();
+    String md5Password = MD5Util.sign(encryptedPassword, salt, "UTF-8");
+    user.setUserPassword(md5Password);
+
+    UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+    updateWrapper.eq("id", user.getId());
+    this.update(user, updateWrapper);
   }
 }
