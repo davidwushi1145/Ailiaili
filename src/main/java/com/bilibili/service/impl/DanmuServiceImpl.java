@@ -97,12 +97,9 @@ public class DanmuServiceImpl
     List<Danmu> nowList = new ArrayList<>();
     if (StringUtils.isNotBlank(value)) {
       nowList = JSONArray.parseArray(value, Danmu.class);
-      nowList.add(danmu);
-      redisTemplate.opsForValue().set(key, JSONObject.toJSONString(nowList));
-    } else {
-      nowList.add(danmu);
-      redisTemplate.opsForValue().set(key, JSONObject.toJSONString(nowList));
     }
+    nowList.add(danmu);
+    redisTemplate.opsForValue().set(key, JSONObject.toJSONString(nowList));
   }
 
   @Override
