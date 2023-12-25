@@ -178,4 +178,42 @@ public class UserApi {
     }
     return new JsonResponse<>(result);
   }
+
+  // 封禁用户
+  @PutMapping("/banUser")
+  public JsonResponse<String> banUser(@RequestParam Long userId) {
+    Long currentUserId = userSupport.getCurrentUserId();
+    // 判断是否有权限
+    UserAuthorities userAuthorities =
+        userAuthService.getUserAuthorities(currentUserId);
+    boolean hasPermission =
+        userAuthorities.getRoleElementOperationList().stream().anyMatch(
+            roleElementOperation
+            -> roleElementOperation.getElementOperationId().equals(2L));
+    if (hasPermission) {
+      userService.banUser(userId);
+    } else {
+      throw new ConditionException("没有权限");
+    }
+    return JsonResponse.success();
+  }
+
+  // 解封用户
+  @PutMapping("/unbanUser")
+  public JsonResponse<String> unbanUser(@RequestParam Long userId) {
+    Long currentUserId = userSupport.getCurrentUserId();
+    // 判断是否有权限
+    UserAuthorities userAuthorities =
+        userAuthService.getUserAuthorities(currentUserId);
+    boolean hasPermission =
+        userAuthorities.getRoleElementOperationList().stream().anyMatch(
+            roleElementOperation
+            -> roleElementOperation.getElementOperationId().equals(2L));
+    if (hasPermission) {
+      userService.unbanUser(userId);
+    } else {
+      throw new ConditionException("没有权限");
+    }
+    return JsonResponse.success();
+  }
 }

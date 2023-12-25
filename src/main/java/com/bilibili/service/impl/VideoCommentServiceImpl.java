@@ -132,4 +132,14 @@ public class VideoCommentServiceImpl
     }
     return new PageResult<>((int)total, list);
   }
+
+  @Override
+  public void passComment(Long commentId) {
+    VideoComment videoComment = this.getById(commentId);
+    if (videoComment == null) {
+      throw new ConditionException("评论不存在");
+    }
+    videoComment.setPass(1);
+    this.updateById(videoComment);
+  }
 }

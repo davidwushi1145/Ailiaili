@@ -254,4 +254,23 @@ public class VideoApi {
     }
     return new JsonResponse<>(result);
   }
+
+  // 审核评论
+  @PostMapping("/passComment")
+  public JsonResponse<String> passComment(@RequestBody Long commentId) {
+    Long userId = userSupport.getCurrentUserId();
+    // 判断是否有权限
+    UserAuthorities userAuthorities =
+        userAuthService.getUserAuthorities(userId);
+    boolean hasPermission =
+        userAuthorities.getRoleElementOperationList().stream().anyMatch(
+            roleElementOperation
+            -> roleElementOperation.getElementOperationId().equals(2L));
+    if (hasPermission) {
+      videoCommentService.passComment(commentId);
+    } else {
+      throw new ConditionException("没有权限");
+    }
+    return JsonResponse.success();
+  }
 }

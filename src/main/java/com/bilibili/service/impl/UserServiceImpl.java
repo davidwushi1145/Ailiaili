@@ -226,4 +226,22 @@ public class UserServiceImpl
     }
     return new PageResult<>(count, list);
   }
+
+  @Override
+  public void banUser(Long userId) {
+    UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+    updateWrapper.eq("id", userId);
+    User user = new User();
+    user.setPass(0);
+    this.update(user, updateWrapper);
+  }
+
+  @Override
+  public void unbanUser(Long userId) {
+    UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+    updateWrapper.eq("id", userId);
+    User user = new User();
+    user.setPass(1);
+    this.update(user, updateWrapper);
+  }
 }
