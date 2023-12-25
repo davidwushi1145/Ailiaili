@@ -88,7 +88,7 @@ public class DanmuApi {
 
   // 审核弹幕
   @PostMapping("/passDanmu")
-  public JsonResponse<Boolean> passDanmu(@RequestBody Long danmuId) {
+  public JsonResponse<Boolean> passDanmu(@RequestParam Long danmuId) {
     Long userId = userSupport.getCurrentUserId();
     // 判断是否有权限
     UserAuthorities userAuthorities =
