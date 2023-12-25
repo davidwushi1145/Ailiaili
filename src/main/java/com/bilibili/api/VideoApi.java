@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.ListView;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -218,9 +217,9 @@ public class VideoApi {
     return new JsonResponse<>(video);
   }
 
-  //查询用户发布的视频
+  // 查询用户发布的视频
   @GetMapping("/getVideosByUserId")
-  public JsonResponse<List<Video>> getVideosByUserId(Long userId){
+  public JsonResponse<List<Video>> getVideosByUserId(Long userId) {
     List<Video> videos = videoService.getVideosByUserId(userId);
     return new JsonResponse<>(videos);
   }
