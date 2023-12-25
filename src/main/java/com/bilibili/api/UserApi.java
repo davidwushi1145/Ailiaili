@@ -6,10 +6,9 @@ import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.dao.domain.PageResult;
 import com.bilibili.dao.domain.User;
 import com.bilibili.dao.domain.UserInfo;
-import com.bilibili.service.ElasticSearchService;
-import com.bilibili.service.UserCoinService;
-import com.bilibili.service.UserFollowingService;
-import com.bilibili.service.UserService;
+import com.bilibili.dao.domain.auth.UserAuthorities;
+import com.bilibili.dao.domain.exception.ConditionException;
+import com.bilibili.service.*;
 import com.bilibili.service.util.RSAUtil;
 import io.swagger.models.auth.In;
 import java.util.List;
@@ -29,6 +28,8 @@ public class UserApi {
   @Autowired private UserFollowingService userFollowingService;
 
   @Autowired private UserCoinService userCoinService;
+
+  @Autowired private UserAuthService userAuthService;
 
   @Autowired private ElasticSearchService elasticSearchService;
 
@@ -150,5 +151,31 @@ public class UserApi {
   public JsonResponse<UserInfo> getUserInfoByUserId(Long userId) {
     User user = userService.getUserInfo(userId);
     return new JsonResponse<>(user.getUserInfo());
+  }
+
+  // 展示被封禁的用户
+  @GetMapping("/getBannedUsers")
+  public JsonResponse<PageResult<User>>
+  getBannedUsers(@RequestParam Integer page, @RequestParam Integer size) {
+    Long userId = userSupport.getCurrentUserId();
+
+    // 判断是否有权限
+    UserAuthorities userAuthorities =
+        userAuthService.getUserAuthorities(userId);
+    boolean hasPermission =
+        userAuthorities.getRoleElementOperationList().stream().anyMatch(
+            roleElementOperation
+            -> roleElementOperation.getElementOperationId().equals(2L));
+    PageResult<User> result;
+    if (hasPermission) {
+
+      JSONObject params = new JSONObject();
+      params.put("page", page);
+      params.put("size", size);
+      result = userService.getBannedUsers(params);
+    } else {
+      throw new ConditionException("没有权限");
+    }
+    return new JsonResponse<>(result);
   }
 }
