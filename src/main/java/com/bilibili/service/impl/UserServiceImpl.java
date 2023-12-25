@@ -95,7 +95,6 @@ public class UserServiceImpl
       throw new ConditionException("当前用户不存在");
     }
     String userPassword = user.getUserPassword();
-    //    userPassword = RSAUtil.encrypt(userPassword);
     String rawPassword;
     try {
       rawPassword = RSAUtil.decrypt(userPassword);
@@ -243,5 +242,12 @@ public class UserServiceImpl
     User user = new User();
     user.setPass(1);
     this.update(user, updateWrapper);
+  }
+
+  @Override
+  public List<User> getAllUser() {
+    QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("pass", 1);
+    return this.list(queryWrapper);
   }
 }
