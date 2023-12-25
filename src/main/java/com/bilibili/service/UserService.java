@@ -31,4 +31,8 @@ public interface UserService extends IService<User> {
   String refreshAccessToken(String refreshToken) throws Exception;
 
   PageResult<User> getBannedUsers(JSONObject params);
+
+    void banUser(Long userId);
+
+    void unbanUser(Long userId);
 }

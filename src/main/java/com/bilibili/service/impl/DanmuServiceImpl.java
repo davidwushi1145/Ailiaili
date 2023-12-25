@@ -135,6 +135,13 @@ public class DanmuServiceImpl
     return result;
   }
 
+  @Override
+  public void passDanmu(Long danmuId) {
+    Danmu danmu = this.getById(danmuId);
+    danmu.setPass(1);
+    this.updateById(danmu);
+  }
+
   public boolean inTime(String startTime, String endTime, Date createTime,
                         SimpleDateFormat sdf) throws ParseException {
     if (StringUtils.isNotBlank(startTime) &&
