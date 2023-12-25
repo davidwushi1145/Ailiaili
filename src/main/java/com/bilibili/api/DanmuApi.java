@@ -55,7 +55,8 @@ public class DanmuApi {
       return new JsonResponse<>(false);
     }
     danmu.setUserId(userId);
-    //danmu.setDanmuTime(String.valueOf(Long.parseLong(danmu.getDanmuTime()) * 1000));
+    // danmu.setDanmuTime(String.valueOf(Long.parseLong(danmu.getDanmuTime()) *
+    // 1000));
     danmuService.addDanmuToRedis(danmu);
     return new JsonResponse<>(true);
   }
