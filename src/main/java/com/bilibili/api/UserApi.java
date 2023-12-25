@@ -62,6 +62,7 @@ public class UserApi {
     return JsonResponse.success(token);
   }
 
+  // 更新当前用户信息
   @PutMapping("/users")
   public JsonResponse<String> updateUsers(@RequestBody User user) {
     Long userId = userSupport.getCurrentUserId();
@@ -231,6 +232,26 @@ public class UserApi {
       if (hasPermission) {
         List<User> userList = userService.getAllUser();
         return new JsonResponse<>(userList);
+      } else {
+        throw new ConditionException("没有权限");
+      }
+    }
+
+    // 更改指定ID用户信息
+    @PutMapping("/updateSignificantUser")
+    public JsonResponse<String> updateSignificantUser(@RequestBody User user) throws Exception {
+      Long currentUserId = userSupport.getCurrentUserId();
+      // 判断是否有权限
+      UserAuthorities userAuthorities =
+              userAuthService.getUserAuthorities(currentUserId);
+      boolean hasPermission =
+              userAuthorities.getRoleElementOperationList().stream().anyMatch(
+                      roleElementOperation
+                              -> roleElementOperation.getElementOperationId().equals(2L));
+      if (hasPermission) {
+        System.out.println(user);
+        userService.updateUser(user);
+        return JsonResponse.success();
       } else {
         throw new ConditionException("没有权限");
       }

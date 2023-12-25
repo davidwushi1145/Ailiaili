@@ -8,7 +8,6 @@ import com.bilibili.dao.domain.UserInfo;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.data.domain.Page;
 
 /**
  * @author
@@ -39,4 +38,6 @@ public interface UserService extends IService<User> {
   void unbanUser(Long userId);
 
   List<User> getAllUser();
+
+  void updateUser(User user) throws Exception;
 }
