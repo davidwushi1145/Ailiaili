@@ -47,6 +47,11 @@ public class Danmu implements Serializable {
      */
     private Date createTime;
 
+    /**
+     * 是否通过审核
+     */
+    private Integer pass;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

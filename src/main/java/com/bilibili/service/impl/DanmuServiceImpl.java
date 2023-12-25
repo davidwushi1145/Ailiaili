@@ -3,8 +3,10 @@ package com.bilibili.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bilibili.dao.domain.Danmu;
+import com.bilibili.dao.domain.PageResult;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.dao.mapper.DanmuMapper;
 import com.bilibili.service.DanmuService;
@@ -113,6 +115,28 @@ public class DanmuServiceImpl extends ServiceImpl<DanmuMapper, Danmu>
     @Async
     public void asyncAddDanmu(Danmu danmu) {
         this.save(danmu);
+    }
+
+    @Override
+    public PageResult<Danmu> getUnpassDanmus(JSONObject params) {
+        Integer page = params.getInteger("page");
+        Integer size = params.getInteger("size");
+        Integer videoId = params.getInteger("videoId");
+        QueryWrapper<Danmu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("pass",0);
+        queryWrapper.eq("video_id",videoId);
+        queryWrapper.orderByDesc("id");
+        int count = (int)this.count(queryWrapper);
+        List<Danmu> list = new ArrayList<>();
+        PageResult<Danmu> result = new PageResult<>(count,list);
+        if(count>0){
+            IPage<Danmu> iPage = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>((long) (page - 1) * size, size);
+            iPage = this.page(iPage, queryWrapper);
+            list = iPage.getRecords();
+            result.setTotal(count);
+            result.setList(list);
+        }
+        return result;
     }
 
     public boolean inTime(String startTime, String endTime, Date createTime, SimpleDateFormat sdf) throws ParseException {

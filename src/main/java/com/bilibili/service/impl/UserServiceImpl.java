@@ -95,6 +95,7 @@ public class UserServiceImpl
       throw new ConditionException("当前用户不存在");
     }
     String userPassword = user.getUserPassword();
+//    userPassword = RSAUtil.encrypt(userPassword);
     String rawPassword;
     try {
       rawPassword = RSAUtil.decrypt(userPassword);
@@ -156,9 +157,8 @@ public class UserServiceImpl
     if (dbUser == null) {
       throw new ConditionException("当前用户不存在");
     }
-    //        String userPassword = user.getUserPassword();
-    String userPassword;
-    userPassword = RSAUtil.encrypt(user.getUserPassword());
+    String userPassword = user.getUserPassword();
+    userPassword = RSAUtil.encrypt(userPassword);
     String rawPassword;
     try {
       rawPassword = RSAUtil.decrypt(userPassword);
@@ -207,5 +207,23 @@ public class UserServiceImpl
     Long userId = refreshToken1.getUserId();
     String accessToken = TokenUtil.generateToken(userId);
     return accessToken;
+  }
+
+  @Override
+  public PageResult<User> getBannedUsers(JSONObject params) {
+    Integer page = params.getInteger("page");
+    Integer size = params.getInteger("size");
+
+    QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("pass", 0);
+    queryWrapper.orderByDesc("id");
+    int count = (int)this.count(queryWrapper);
+    List<User> list = new ArrayList<>();
+    if (count > 0) {
+      IPage<User> iPage = new Page<>((long) (page - 1) * size, size);
+      iPage = this.page(iPage, queryWrapper);
+      list = iPage.getRecords();
+    }
+    return new PageResult<>(count, list);
   }
 }

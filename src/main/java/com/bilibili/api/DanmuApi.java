@@ -1,9 +1,15 @@
 package com.bilibili.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.Danmu;
 import com.bilibili.dao.domain.JsonResponse;
+import com.bilibili.dao.domain.PageResult;
+import com.bilibili.dao.domain.User;
+import com.bilibili.dao.domain.auth.UserAuthorities;
+import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.DanmuService;
+import com.bilibili.service.UserAuthService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +28,8 @@ public class DanmuApi {
     @Autowired
     private DanmuService danmuService;
 
+    @Autowired
+    private UserAuthService userAuthService;
     //查询弹幕
     @GetMapping("/danmus")
     public JsonResponse<List<Danmu>> getDanmus(@RequestParam Long videoId,
@@ -53,6 +61,28 @@ public class DanmuApi {
         danmu.setUserId(userId);
         danmuService.addDanmuToRedis(danmu);
         return new JsonResponse<>(true);
+    }
+
+    //查询审核未通过的弹幕
+    @GetMapping("/UnpassDanmus")
+    public JsonResponse<PageResult<Danmu>> getUnpassDanmus(@RequestParam Long videoId,@RequestParam Integer page, @RequestParam Integer size){
+        Long userId = userSupport.getCurrentUserId();
+
+        //判断是否有权限
+        UserAuthorities userAuthorities = userAuthService.getUserAuthorities(userId);
+        boolean hasPermission = userAuthorities.getRoleElementOperationList().stream().anyMatch(roleElementOperation -> roleElementOperation.getElementOperationId().equals(2L));
+        PageResult<Danmu> result;
+        if (hasPermission) {
+
+            JSONObject params = new JSONObject();
+            params.put("page", page);
+            params.put("size", size);
+            params.put("videoId", videoId);
+            result = danmuService.getUnpassDanmus(params);
+        } else {
+            throw new ConditionException("没有权限");
+        }
+        return new JsonResponse<>(result);
     }
 
 }

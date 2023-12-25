@@ -1,5 +1,6 @@
 package com.bilibili.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +14,7 @@ import com.bilibili.dao.mapper.VideoCommentMapper;
 import com.bilibili.service.UserInfoService;
 import com.bilibili.service.VideoCommentService;
 import com.bilibili.service.VideoService;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +93,31 @@ public class VideoCommentServiceImpl extends ServiceImpl<VideoCommentMapper, Vid
                 });
                 comments.setChildList(childList);
                 comments.setUserInfo(map.get(comments.getUserId()));
+            });
+        }
+        return new PageResult<>((int) total,list);
+    }
+
+    @Override
+    public PageResult<VideoComment> getUnpassComments(JSONObject params) {
+        Integer page = params.getInteger("page");
+        Integer size = params.getInteger("size");
+        QueryWrapper<VideoComment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("pass",0);
+        queryWrapper.orderByDesc("id");
+        IPage<VideoComment> iPage = new Page<>(page,size);
+        IPage<VideoComment> pageResult = this.page(iPage, queryWrapper);
+        long total = pageResult.getTotal();
+        List<VideoComment> list = pageResult.getRecords();
+        if(total>0){
+            Set<Long> userIdSet = list.stream().map(VideoComment::getUserId).collect(Collectors.toSet());
+            Set<Long> replyUserIdSet = list.stream().map(VideoComment::getReplyUserId).collect(Collectors.toSet());
+            userIdSet.addAll(replyUserIdSet);
+            List<UserInfo> userInfoList = userInfoService.getListByUserIds(userIdSet);
+            Map<Long,UserInfo> map = userInfoList.stream().collect(Collectors.toMap(UserInfo::getUserId,userInfo -> userInfo));
+            list.forEach(comments -> {
+                comments.setUserInfo(map.get(comments.getUserId()));
+                comments.setReplyUserInfo(map.get(comments.getReplyUserId()));
             });
         }
         return new PageResult<>((int) total,list);

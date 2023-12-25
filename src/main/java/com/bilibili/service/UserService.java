@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.bilibili.dao.domain.PageResult;
 import com.bilibili.dao.domain.User;
 import com.bilibili.dao.domain.UserInfo;
+import org.springframework.data.domain.Page;
 
 import java.util.Map;
 
@@ -30,4 +31,6 @@ public interface UserService extends IService<User> {
     void logout(String refreshToken, Long userId);
 
     String refreshAccessToken(String refreshToken) throws Exception;
+
+    PageResult<User> getBannedUsers(JSONObject params);
 }

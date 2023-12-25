@@ -58,6 +58,11 @@ public class VideoComment implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否通过审核
+     */
+    private Integer pass;
+
     @TableField(exist = false)
     private List<VideoComment> childList;
 

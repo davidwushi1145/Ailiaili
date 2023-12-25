@@ -1,7 +1,10 @@
 package com.bilibili.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.*;
+import com.bilibili.dao.domain.auth.UserAuthorities;
+import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.*;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +21,8 @@ public class VideoApi {
   @Autowired private VideoService videoService;
 
   @Autowired private UserSupport userSupport;
+
+  @Autowired private UserAuthService userAuthService;
 
   @Autowired private VideoLikeService videoLikeService;
 
@@ -223,4 +228,26 @@ public class VideoApi {
     List<Video> videos = videoService.getVideosByUserId(userId);
     return new JsonResponse<>(videos);
   }
+
+  // 查询审核未通过的评论
+    @GetMapping("/getUnpassComments")
+    public JsonResponse<PageResult<VideoComment>> getUnpassComments(@RequestParam Integer page, @RequestParam Integer size) {
+      Long userId = userSupport.getCurrentUserId();
+
+      //判断是否有权限
+      UserAuthorities userAuthorities = userAuthService.getUserAuthorities(userId);
+      boolean hasPermission = userAuthorities.getRoleElementOperationList().stream().anyMatch(roleElementOperation -> roleElementOperation.getElementOperationId().equals(2L));
+      PageResult<VideoComment> result;
+      if (hasPermission) {
+
+        JSONObject params = new JSONObject();
+        params.put("page", page);
+        params.put("size", size);
+        result = videoCommentService.getUnpassComments(params);
+      } else {
+        throw new ConditionException("没有权限");
+      }
+      return new JsonResponse<>(result);
+    }
+
 }
