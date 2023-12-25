@@ -17,4 +17,6 @@ public interface UserConstant {
     String USER_FOLLOWING_GROUP_ALL_NAME = "全部分组";
 
     String USER_FOLLOWING_GROUP_TYPE_USER = "3";
+
+    String DEFAULT_AVATAR = "https://try2b1st-photo-1311984591.cos.ap-guangzhou.myqcloud.com/elm%2FuserImg%2Fv2-2773493ecb6da55990027eb781ffc414_720w.webp";
 }

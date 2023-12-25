@@ -66,6 +66,8 @@ public class UserServiceImpl
     userInfo.setNick(UserConstant.DEFAULT_NICK);
     userInfo.setBirth(UserConstant.DEFAULT_BIRTH);
     userInfo.setGender(UserConstant.GENDER_UNKNOW);
+    userInfo.setAvatar(UserConstant.DEFAULT_AVATAR);
+
     userInfoService.save(userInfo);
     // 添加用户默认权限角色
     userAuthService.addUserDefaultRole(user.getId());
