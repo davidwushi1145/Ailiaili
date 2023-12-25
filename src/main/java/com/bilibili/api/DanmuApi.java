@@ -87,19 +87,22 @@ public class DanmuApi {
     return new JsonResponse<>(result);
   }
 
-    // 审核弹幕
-    @PostMapping("/passDanmu")
-    public JsonResponse<Boolean> passDanmu(@RequestBody Long danmuId) {
-        Long userId = userSupport.getCurrentUserId();
-        // 判断是否有权限
-        UserAuthorities userAuthorities = userAuthService.getUserAuthorities(userId);
-        boolean hasPermission = userAuthorities.getRoleElementOperationList().stream().anyMatch(roleElementOperation -> roleElementOperation.getElementOperationId().equals(2L));
-        if (hasPermission) {
-            danmuService.passDanmu(danmuId);
-        } else {
-            throw new ConditionException("没有权限");
-        }
-        return new JsonResponse<>(true);
+  // 审核弹幕
+  @PostMapping("/passDanmu")
+  public JsonResponse<Boolean> passDanmu(@RequestBody Long danmuId) {
+    Long userId = userSupport.getCurrentUserId();
+    // 判断是否有权限
+    UserAuthorities userAuthorities =
+        userAuthService.getUserAuthorities(userId);
+    boolean hasPermission =
+        userAuthorities.getRoleElementOperationList().stream().anyMatch(
+            roleElementOperation
+            -> roleElementOperation.getElementOperationId().equals(2L));
+    if (hasPermission) {
+      danmuService.passDanmu(danmuId);
+    } else {
+      throw new ConditionException("没有权限");
     }
-
+    return new JsonResponse<>(true);
+  }
 }
