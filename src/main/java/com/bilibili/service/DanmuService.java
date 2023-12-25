@@ -22,5 +22,5 @@ public interface DanmuService extends IService<Danmu> {
 
   PageResult<Danmu> getUnpassDanmus(JSONObject params);
 
-    void passDanmu(Long danmuId);
+  void passDanmu(Long danmuId);
 }

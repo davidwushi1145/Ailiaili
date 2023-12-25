@@ -19,5 +19,5 @@ public interface VideoCommentService extends IService<VideoComment> {
 
   PageResult<VideoComment> getUnpassComments(JSONObject params);
 
-    void passComment(Long commentId);
+  void passComment(Long commentId);
 }

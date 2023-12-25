@@ -32,7 +32,7 @@ public interface UserService extends IService<User> {
 
   PageResult<User> getBannedUsers(JSONObject params);
 
-    void banUser(Long userId);
+  void banUser(Long userId);
 
-    void unbanUser(Long userId);
+  void unbanUser(Long userId);
 }
