@@ -115,10 +115,8 @@ public class DanmuServiceImpl
   public PageResult<Danmu> getUnpassDanmus(JSONObject params) {
     Integer page = params.getInteger("page");
     Integer size = params.getInteger("size");
-    Integer videoId = params.getInteger("videoId");
     QueryWrapper<Danmu> queryWrapper = new QueryWrapper<>();
     queryWrapper.eq("pass", 0);
-    queryWrapper.eq("video_id", videoId);
     queryWrapper.orderByDesc("id");
     int count = (int)this.count(queryWrapper);
     List<Danmu> list = new ArrayList<>();

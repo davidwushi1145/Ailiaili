@@ -62,7 +62,7 @@ public class DanmuApi {
   // 查询审核未通过的弹幕
   @GetMapping("/UnpassDanmus")
   public JsonResponse<PageResult<Danmu>>
-  getUnpassDanmus(@RequestParam Long videoId, @RequestParam Integer page,
+  getUnpassDanmus(@RequestParam Integer page,
                   @RequestParam Integer size) {
     Long userId = userSupport.getCurrentUserId();
 
@@ -79,7 +79,6 @@ public class DanmuApi {
       JSONObject params = new JSONObject();
       params.put("page", page);
       params.put("size", size);
-      params.put("videoId", videoId);
       result = danmuService.getUnpassDanmus(params);
     } else {
       throw new ConditionException("没有权限");
