@@ -1,13 +1,11 @@
 package com.bilibili.api;
 
+import com.bilibili.dao.domain.File;
 import com.bilibili.dao.domain.JsonResponse;
 import com.bilibili.service.FileService;
 import com.bilibili.service.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -37,10 +35,17 @@ public class FileApi {
 
 
     //上传广告文件
-    @PutMapping("file-advertisement")
+    @PutMapping("/file-advertisement")
     public JsonResponse<Long> uploadAdvertisementFile(MultipartFile file, String fileMD5) throws IOException {
         Long contentId = fileService.uploadAdvertisementFile(file, fileMD5);
         return new JsonResponse<>(contentId);
+    }
+
+    //获取广告文件
+    @GetMapping("file-advertisement")
+    public JsonResponse<File> getFileAdvertisement(Long id) {
+        File file = fileService.getById(id);
+        return new JsonResponse<>(file);
     }
 
     //删除广告文件

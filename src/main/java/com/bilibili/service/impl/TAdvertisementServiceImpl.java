@@ -9,6 +9,8 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 /**
  * @author
  * @description 针对表【t_advertisement(广告表)】的数据库操作Service实现
@@ -25,6 +27,19 @@ public class TAdvertisementServiceImpl
   public TAdvertisement getByAdSpaceId(Long adSpaceId) {
     QueryWrapper<TAdvertisement> queryWrapper = new QueryWrapper<>();
     queryWrapper.eq("ad_space_id", adSpaceId);
+    queryWrapper.eq("status","激活");
     return tAdvertisementMapper.selectOne(queryWrapper);
+  }
+
+  @Override
+  public Map<Long,Long> getDoingAdSpace() {
+    QueryWrapper<TAdvertisement> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("status","激活");
+    List<TAdvertisement> list = tAdvertisementMapper.selectList(queryWrapper);
+   Map<Long,Long> map = new HashMap<>();
+    for(TAdvertisement tAdvertisement : list){
+      map.put(tAdvertisement.getAdSpaceId(), 1L);
+    }
+    return map;
   }
 }
