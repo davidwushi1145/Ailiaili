@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bilibili.dao.domain.Video;
 import com.bilibili.dao.domain.VideoCollection;
+import com.bilibili.dao.domain.VideoOperation;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.dao.mapper.VideoCollectionMapper;
 import com.bilibili.service.VideoCollectionService;
+import com.bilibili.service.VideoOperationService;
 import com.bilibili.service.VideoService;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,8 @@ public class VideoCollectionServiceImpl
     implements VideoCollectionService {
 
   @Autowired private VideoService videoService;
+
+  @Autowired private VideoOperationService videoOperationService;
 
   @Override
   @Transactional
@@ -53,6 +57,11 @@ public class VideoCollectionServiceImpl
 
     // Update the video
     videoService.updateById(video);
+    VideoOperation videoOperation = new VideoOperation();
+    videoOperation.setUserId(userId);
+    videoOperation.setVideoId(videoId);
+    videoOperation.setOperationType("1");
+    videoOperationService.save(videoOperation);
   }
 
   @Override

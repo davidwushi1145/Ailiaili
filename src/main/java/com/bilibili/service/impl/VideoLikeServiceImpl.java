@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bilibili.dao.domain.Video;
 import com.bilibili.dao.domain.VideoLike;
+import com.bilibili.dao.domain.VideoOperation;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.dao.mapper.VideoLikeMapper;
 import com.bilibili.service.VideoLikeService;
+import com.bilibili.service.VideoOperationService;
 import com.bilibili.service.VideoService;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ public class VideoLikeServiceImpl
     implements VideoLikeService {
 
   @Autowired private VideoService videoService;
+  @Autowired private VideoOperationService videoOperationService;
 
   @Override
   public void addVideoLike(Long videoId, Long userId) {
@@ -43,8 +48,13 @@ public class VideoLikeServiceImpl
     this.save(videoLike);
     // Increase the like count
     video.setLikes(video.getLikes() + 1);
+    VideoOperation videoOperation = new VideoOperation();
+    videoOperation.setUserId(userId);
+    videoOperation.setVideoId(videoId);
+    videoOperation.setOperationType("0");
     // Update the video
     videoService.updateById(video);
+    videoOperationService.save(videoOperation);
   }
 
   @Override
@@ -55,10 +65,8 @@ public class VideoLikeServiceImpl
     this.remove(queryWrapper);
     // Get the video
     Video video = videoService.getById(videoId);
-
     // Decrease the like count
     video.setLikes(video.getLikes() - 1);
-
     // Update the video
     videoService.updateById(video);
   }

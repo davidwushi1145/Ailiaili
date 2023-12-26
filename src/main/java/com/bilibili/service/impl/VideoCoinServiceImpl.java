@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bilibili.dao.domain.Video;
 import com.bilibili.dao.domain.VideoCoin;
+import com.bilibili.dao.domain.VideoOperation;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.dao.mapper.VideoCoinMapper;
 import com.bilibili.service.UserCoinService;
 import com.bilibili.service.VideoCoinService;
+import com.bilibili.service.VideoOperationService;
 import com.bilibili.service.VideoService;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,8 @@ public class VideoCoinServiceImpl
   @Autowired private UserCoinService userCoinService;
 
   @Autowired private VideoService videoService;
+
+  @Autowired private VideoOperationService videoOperationService;
 
   @Override
   @Transactional
@@ -69,6 +73,12 @@ public class VideoCoinServiceImpl
     video.setCoins(video.getCoins() + amount);
     // Update the video
     videoService.updateById(video);
+    // Add the video operation
+    VideoOperation videoOperation = new VideoOperation();
+    videoOperation.setUserId(userId);
+    videoOperation.setVideoId(videoId);
+    videoOperation.setOperationType("2");
+    videoOperationService.save(videoOperation);
   }
 
   @Override
