@@ -53,8 +53,7 @@ public class TMessagesServiceImpl
         .eq("receiver_id", consumerId)
         .or()
         .eq("receiver_id", userId)
-        .eq("sender_id", consumerId)
-        .orderByDesc("send_time");
+        .eq("sender_id", consumerId);
 
     return tMessagesMapper.selectList(queryWrapper);
   }
