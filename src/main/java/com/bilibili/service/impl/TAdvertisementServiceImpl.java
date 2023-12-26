@@ -5,11 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bilibili.dao.domain.TAdvertisement;
 import com.bilibili.dao.mapper.TAdvertisementMapper;
 import com.bilibili.service.TAdvertisementService;
+import java.util.*;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * @author
@@ -27,17 +26,17 @@ public class TAdvertisementServiceImpl
   public TAdvertisement getByAdSpaceId(Long adSpaceId) {
     QueryWrapper<TAdvertisement> queryWrapper = new QueryWrapper<>();
     queryWrapper.eq("ad_space_id", adSpaceId);
-    queryWrapper.eq("status","激活");
+    queryWrapper.eq("status", "激活");
     return tAdvertisementMapper.selectOne(queryWrapper);
   }
 
   @Override
-  public Map<Long,Long> getDoingAdSpace() {
+  public Map<Long, Long> getDoingAdSpace() {
     QueryWrapper<TAdvertisement> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("status","激活");
+    queryWrapper.eq("status", "激活");
     List<TAdvertisement> list = tAdvertisementMapper.selectList(queryWrapper);
-   Map<Long,Long> map = new HashMap<>();
-    for(TAdvertisement tAdvertisement : list){
+    Map<Long, Long> map = new HashMap<>();
+    for (TAdvertisement tAdvertisement : list) {
       map.put(tAdvertisement.getAdSpaceId(), 1L);
     }
     return map;

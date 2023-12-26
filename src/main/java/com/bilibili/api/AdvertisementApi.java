@@ -7,7 +7,6 @@ import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.*;
 import java.math.BigDecimal;
 import java.util.*;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class AdvertisementApi {
     userSupport.getCurrentUserId();
 
     List<TAdSpace> tAdSpaceList = tAdSpaceService.list();
-    Map<Long,Long> map = tAdvertisementService.getDoingAdSpace();
+    Map<Long, Long> map = tAdvertisementService.getDoingAdSpace();
 
     // 从tAdSpaceList中除去当前元素
     tAdSpaceList.removeIf(tAdSpace -> map.containsKey(tAdSpace.getId()));

@@ -1,12 +1,11 @@
 package com.bilibili.api;
-import java.math.BigDecimal;
-
 import com.alibaba.fastjson.JSONObject;
 import com.bilibili.api.support.UserSupport;
 import com.bilibili.dao.domain.*;
 import com.bilibili.dao.domain.auth.UserAuthorities;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +36,7 @@ public class VideoApi {
 
   @Autowired private ElasticSearchService elasticSearchService;
 
-  @Autowired
-  private TAdSpaceService tAdSpaceService;
+  @Autowired private TAdSpaceService tAdSpaceService;
 
   // 添加视频
   @PostMapping("/videos")
@@ -51,7 +49,7 @@ public class VideoApi {
     video.setLikes(0);
     video.setViews(0);
     videoService.addVideos(video);
-    //添加广告位
+    // 添加广告位
     TAdSpace tAdSpace = new TAdSpace();
     tAdSpace.setId(video.getId());
     tAdSpace.setDescription(video.getId() + "号视频下的广告位");

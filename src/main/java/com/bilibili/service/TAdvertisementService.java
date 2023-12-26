@@ -2,7 +2,6 @@ package com.bilibili.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bilibili.dao.domain.TAdvertisement;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -19,5 +18,5 @@ public interface TAdvertisementService extends IService<TAdvertisement> {
    * 获取正在工作的广告位
    * @return
    */
-  Map<Long,Long> getDoingAdSpace();
+  Map<Long, Long> getDoingAdSpace();
 }
