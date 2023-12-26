@@ -36,6 +36,7 @@ public class ScheduledTasks {
         }
       }
       redisTemplate.delete(key);
+      redisTemplate.delete("now-danmu-video-" + videoId);
     }
   }
 

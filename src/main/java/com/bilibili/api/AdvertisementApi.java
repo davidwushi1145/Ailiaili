@@ -6,10 +6,7 @@ import com.bilibili.dao.domain.*;
 import com.bilibili.dao.domain.exception.ConditionException;
 import com.bilibili.service.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,7 +39,14 @@ public class AdvertisementApi {
   // 获取广告位信息
   @GetMapping("/get-adSpaceList")
   public JsonResponse<List<TAdSpace>> getAdSpaceList() {
+    userSupport.getCurrentUserId();
+
     List<TAdSpace> tAdSpaceList = tAdSpaceService.list();
+    Map<Long, Long> map = tAdvertisementService.getDoingAdSpace();
+
+    // 从tAdSpaceList中除去当前元素
+    tAdSpaceList.removeIf(tAdSpace -> map.containsKey(tAdSpace.getId()));
+
     return new JsonResponse<>(tAdSpaceList);
   }
 
