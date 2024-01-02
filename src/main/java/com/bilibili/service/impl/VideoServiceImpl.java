@@ -112,7 +112,7 @@ public class VideoServiceImpl
     UserSimilarity similarity = new UncenteredCosineSimilarity(dataModel);
     // 获取用户邻居
     UserNeighborhood userNeighborhood =
-        new NearestNUserNeighborhood(2, similarity, dataModel);
+        new NearestNUserNeighborhood(10, similarity, dataModel);
     long[] ar = userNeighborhood.getUserNeighborhood(userId);
     // 构建推荐器
     Recommender recommender = new GenericUserBasedRecommender(

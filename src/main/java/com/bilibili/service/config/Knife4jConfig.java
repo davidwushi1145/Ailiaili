@@ -19,7 +19,8 @@ public class Knife4jConfig {
     return new Docket(DocumentationType.SWAGGER_2)
         .apiInfo(new ApiInfoBuilder()
                      // 描述字段支持Markdown语法
-                     .description("# Bilibili Api")
+                     .description("# Ailiaili Api")
+                     .title("Ailiaili Api")
                      .version("1.0")
                      .build())
         // 分组名称
